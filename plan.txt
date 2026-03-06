@@ -1,0 +1,224 @@
+layout navbar on the side 25%~
+task list on the other 75%
+    1 header
+        -TO DO LIST in the middle
+    1 information bar that:
+        CONTAINS:
+            -2 leugró ablak ami rangsorolja a prioritást, és a due date-task
+            -project name
+            -search bar
+            -add new task
+    1 for the current tasks takes up big space
+        there should be a calendar with current month, days, on top of that a <Year> <Month> slider
+        you could click inside the calendar that brings up the actual task menu, with a list for tasks, 
+        for tasks:
+           -you can delete them
+           -add comments
+           -list them out
+           -edit them 
+           -save them
+           -postpone them
+           if completed its get ruled out but stays in there, 
+        this get saved to currentProject/currentYear.currentMonth.currentDay
+
+        -add new task 
+            brings app a form, that gets data for the task, due date is prefilled to current.date if currentday text=today
+            -input for task
+            -input for description
+            -priority setting
+            -reminder
+            -select project
+
+
+
++----------------------+
+| Projects             |
+| -------------------- |
+| Project 1            |
+| Project 2            |
+| Project 3            |
+| ...                  |
+|----------------------|
+| Today                |
+| Upcoming             |  
+|----------------------|
+| Settings ⚙️           |
++----------------------+
+
+Features
+
+Task Windows
+Show top 5 priority tasks per day
+Display title, small priority icon, due time
+Completed tasks could be faded or struck-through
+
+Interactions
+Click task window → opens Today view for that day
+Hover → tooltip with short description
+
+Optional: drag & drop between dates (future enhancement)
+Dynamic Calendar Range
+Automatically adjusts start and end based on earliest and latest due dates
+Makes calendar compact and focused on the project’s actual tasks
+
+Filters / Sorting
+Above calendar: sort by priority, due date, tags
+Keeps top tasks visible and manageable
+
+
+PROJECT MODE
+Project: Project 1
+March 2026 (First task: 3rd, Last task / DUE DAY: 20th)
++-----+-----+-----+-----+-----+-----+-----+
+| Su  | Mo  | Tu  | We  | Th  | Fr  | Sa  |
++-----+-----+-----+-----+-----+-----+-----+
+|     |     | 3   | 4   | 5   | 6   | 7   |
+|     |     | [T1] [T2] |     |     |     |
++-----+-----+-----+-----+-----+-----+-----+
+| 8   | 9   | 10  | 11  | 12  | 13  | 14  |
+| [T1]|     |     |     |     |     |     |
++-----+-----+-----+-----+-----+-----+-----+
+| 15  | 16  | 17  | 18  | 19  | 20 DUE|   |
+| [T1]| [T2]|             (red highlight) |
++-----+-----+-----+-----+-----+-----+-----+
+FEATURES
+DUE DAY Highlight
+The last task date in the project is visually highlighted in red
+Could include text: 2026/03/20 DUE
+Draws immediate attention to project deadline
+Task Windows
+Shows top 5 priority tasks per day
+Completed tasks are faded or struck-through
+
+Interactions
+Click task window → Today view
+Hover → tooltip with short description
+Drag & drop optional later
+Dynamic Calendar Range
+Only shows days between first task and latest due date
+
+Filters / Sorting
+Dropdown above calendar: sort by priority, due date, tags
+
+UPCOMING MODE
++----------------------------------------+                
+|               TO DO LIST               |               
++----------------------------------------+
++----------------------------------------+
+| Project: X              + Add Task ⊕   |
+|  Search: [_______________________]     |
++----------------------------------------+ 
++-----+-----+-----+-----+-----+-----+----+
+| Su  | Mo  | Tu  | We  | Th  | Fr  | Sa |
++-----+-----+-----+-----+-----+-----+----+
+|     |     | 1   | 2   | 3   | 4   | 5  | 
+|     |     |     |     |Task1|Task2|    |
++-----+-----+-----+-----+-----+-----+----+
+| 6   | 7   | 8   | 9   | 10  | 11  | 12 |
+| [Task1]                                |
++-----+-----+-----+-----+-----+-----+----+
+| ... (rest of month)                    |
++----------------------------------------+  
+
+
+TODAY MODE
++----------------------------------------+                
+|               TO DO LIST               |
++----------------------------------------+
++----------------------------------------+
+| Project: X              + Add Task ⊕   |
+|  Search: [_______________________]     |
++----------------------------------------+  
++----------------------------------------+
+| Calendar: <Year> <Month>               |
+|  Su Mo Tu We Th Fr Sa                  |
+|  1  2  3  4  5 ...                     |
++----------------------------------------+
+| Tasks for Selected Day:                |
+|  - [ ] Task 1                          |
+|     Description: ...                   |
+|     Priority: High   Due: 2026-03-05   |
+|    [Edit] [Delete] [Comment] [Postpone]|
+|  - [x] Task 2 (completed)              |
+|     Description: ...                   |
+|     Priority: Medium                   |
++----------------------------------------+
+
+
++-----------------------------+   
+| Add New Task                |
+|-----------------------------|
+| [____________Title______]   |
+| [_______Description_____]   |
+| Priority: [Low|Med|High ▼]  |
+| Due Date: [MM/DD/YYYY]      |
+| Reccuring task? yes/no      |
+| Reminder: [MM/DD/YYYY HH:MM]|
+| Project: [Dropdown]         |
+|     [Save]   [Cancel]       |
++-----------------------------+
+
+side nav bar functions
+    SwitchMenu
+
+    
+
+
+main screen functions
+    PROJECT MODE
+        Calendar factory
+    UPCOMING MODE
+        Calendar factory
+    TODAY MODE
+        Daily tasks
+
+    currentView 
+    currentProject 
+    currentDate 
+
+
+top bar functions
+    Add task
+        openTaskForm()
+        createTask()
+        saveTask()
+    Searchbar
+        searchTasks(query)
+        displaySearchResults()
+    remapping function
+
+functions
+
+Calendar factory
+    createCalendarGrid()
+    createDayBox()
+    insertTaskWindows()
+    highlightDueDay()
+
+mini calendar factory
+
+Add tasks component factory
+    editTask()
+    deleteTask()
+    completeTask()
+    postponeTask()
+    addComment()
+    saveTask()
+
+Task factory
+    createTaskCard()
+    createTaskTitle()
+    createTaskButtons()
+    createTaskComments()
+
+daily tasks
+    renderDailyTasks(date)
+
+task
+    title
+    description
+    project
+    dueDate
+    priority
+    completed
+    comments
