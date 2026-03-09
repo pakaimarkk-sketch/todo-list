@@ -22,16 +22,17 @@ body {
     text-align: center;
 }
 
-#navProjects div, #today div, #upcoming div {
+#navProjects button, #today button, #thisMonth button, #thisWeek button {
     padding: 0.5em ;
     margin: 0.8em 0em;
-    border: 1px solid black; 
+    border: 1px solid black;
+
 }
 
 #main {
     display: grid;
     grid-column: 2 / 3;
-    grid-template-rows: 10% 15% 70% 5%;
+    grid-template-rows: 20% 75% 5%;
     border-left: 2px solid black;
 }
 
@@ -47,8 +48,13 @@ body {
 
 }
 
+#todo {
+    border: 2px solid red;
+}
+
 #mainFooter {
     display:flex;
     align-items: center;
     justify-content: center;
 }
+
