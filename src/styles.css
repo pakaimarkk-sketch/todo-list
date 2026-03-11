@@ -22,11 +22,10 @@ body {
     text-align: center;
 }
 
-#navProjects button, #today button, #thisMonth button, #thisWeek button {
+#navProjects button, #today, #thisMonth, #thisWeek {
     padding: 0.5em ;
     margin: 0.8em 0em;
     border: 1px solid black;
-
 }
 
 #main {
@@ -58,3 +57,20 @@ body {
     justify-content: center;
 }
 
+#taskCard {
+    width: 300px;
+    display: flex;
+    flex-direction: column;
+    position: fixed;
+    top: 50%;
+    left: 50%;
+    transform: translate(-50%, -50%);
+    border: solid 2px black;
+    padding: 1rem 5rem;
+    gap: 0.5rem;
+    background-color: rgba(128, 128, 128, 0.76);
+}
+
+.hidden {
+    display: none;
+}

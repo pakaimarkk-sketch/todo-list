@@ -4,9 +4,10 @@ export const createTodayView = () => {
     const todayHeader = createEl("div", "todayHeader", null)
     wrapper.appendChild(todayHeader)
 
-    const addTask = createEl("button", "todayAddTask", null)
-    addTask.textContent = "Add Task"
-    todayHeader.appendChild(addTask)
+    const todayAddTask = createEl("button", null, "addTaskBtn")
+    todayAddTask.textContent = "Add Task"
+    todayHeader.appendChild(todayAddTask)
+
     const date = createEl("div", "todayDate", null)
     date.textContent = "Todays Date"
     todayHeader.appendChild(date)
@@ -20,7 +21,7 @@ export const createTodayView = () => {
     return wrapper;
 }
 
-const createEl = (tag, id, classes) => {
+export const createEl = (tag, id, ...classes) => {
     const el = document.createElement(tag);
     if (id) el.id = id;
     if (classes) el.classList.add(...classes);
