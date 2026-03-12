@@ -31,7 +31,7 @@ body {
 #main {
     display: grid;
     grid-column: 2 / 3;
-    grid-template-rows: 20% 75% 5%;
+    grid-template-rows: 10% 85% 5%;
     border-left: 2px solid black;
 }
 
@@ -73,4 +73,38 @@ body {
 
 .hidden {
     display: none;
+}
+
+.iconBtn {
+    border: none;
+    background: transparent;
+    cursor: pointer;
+    padding: 4px;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+}
+
+.iconBtn svg {
+    width: 20px;
+    height: 20px;
+    fill: currentColor;
+}
+
+.taskHolder {
+    display: flex;
+    border: 2px solid yellow;
+    justify-content: space-between;
+}
+
+.taskContent {
+    display: flex;
+    flex-direction: column;
+    gap: 8px;
+}
+
+.taskActions {
+    display: flex;
+    flex-direction: column;
+    gap: 8px;
 }

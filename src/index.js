@@ -1,6 +1,6 @@
 import { updateUI } from "./modules/screenController";
-import { sidebarBtns } from "./components/sidebar";
-import { createCard } from "./components/taskForm";
+import { sidebarBtns } from "./modules/screenController";
+import { createForm } from "./components/createView";
 
 import "./styles.css";
 
