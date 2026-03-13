@@ -1,7 +1,11 @@
 import { createEl, createIconButton } from "../utils/dom";
+import { loadTasks, saveTasks } from "./storage";
 
+let tasks = loadTasks();
 
-const tasks = [];
+export function getTasks() {
+    return tasks;
+}
 
 export const createTaskObject = (form) => {
     const data = new FormData(form);
@@ -30,8 +34,17 @@ function validateTask(task) {
     return errors;
 };
 
-function addTask(task) {
-    tasks.push(task);
+function addTask(taskData) {
+    const newTask = {
+        id: crypto.randomUUID(),
+        title: taskData.title,
+        description: taskData.description,
+        dueDate: taskData.dueDate,
+        completed: false,
+    };
+
+    tasks.push(newTask);
+    saveTasks(tasks);
 };
 
 export function removeTask(taskId) {
@@ -39,8 +52,10 @@ export function removeTask(taskId) {
 
     if (index !== -1) {
         tasks.splice(index, 1);
+        saveTasks(tasks);
     }
 };
+
 
 export function toggleTask(taskId) {
     const task = tasks.find((task) => task.id === taskId);
@@ -50,7 +65,7 @@ export function toggleTask(taskId) {
     }
 };
 
-function renderTask(task, taskList) {
+function renderTask(task, taskList, onEdit, onDelete, onToggle) {
     const taskHolder = createEl("div", null, "taskHolder");
 
     const checkbox = createEl("input", null, "checkBox");
@@ -59,16 +74,16 @@ function renderTask(task, taskList) {
 
     checkbox.addEventListener("change", () => {
         toggleTask(task.id);
-        renderTasks(taskList);
+        onToggle(task.id)
     });
 
-    const title = createEl("h3", null, "taskTitle");
+    const title = createEl("p", null, "taskTitle");
     title.textContent = task.title;
 
     const description = createEl("p", null, "taskDesc");
     description.textContent = task.description || "";
 
-    const dueDate = createEl("span", null, "taskDate");
+    const dueDate = createEl("p", null, "taskDate");
     dueDate.textContent = task.dueDate || "";
 
     const actions = createEl("div", null, "taskActions");
@@ -96,12 +111,12 @@ function renderTask(task, taskList) {
     );
 
     editBtn.addEventListener("click", () => {
-        console.log("edit", task.id);
+        onEdit(task)
     });
 
     deleteBtn.addEventListener("click", () => {
         removeTask(task.id);
-        renderTasks(taskList);
+        onDelete(task.id)
     });
 
     if (task.completed) {
@@ -114,17 +129,24 @@ function renderTask(task, taskList) {
     return taskHolder;
 };
 
-export function renderTasks(taskList) {
+export function fillForm(form, task) {
+    form.elements.taskTitle.value = task.title;
+    form.elements.taskDesc.value = task.description;
+    form.elements.taskDueDate.value = task.dueDate;
+    form.elements.taskProject.value = task.project;
+};
+
+export function renderTasks(taskList, onEdit, onDelete, onToggle) {
     if (!taskList) return;
 
     taskList.textContent = "";
 
     tasks.forEach((task) => {
-        taskList.appendChild(renderTask(task, taskList));
+        taskList.appendChild(renderTask(task, taskList, onEdit, onDelete, onToggle));
     });
 };
 
-export function createTask(form, taskList) {
+export function createTask(form, taskList, editingId = null, onDone) {
     const task = createTaskObject(form);
     const errors = validateTask(task);
 
@@ -133,10 +155,19 @@ export function createTask(form, taskList) {
         return;
     }
 
-    addTask(task);
-    renderTasks(taskList);
+    if (editingId) {
+        const existing = tasks.find(t => t.id === editingId);
+        if (existing) {
+            existing.title = task.title;
+            existing.description = task.description;
+            existing.dueDate = task.dueDate;
+            existing.project = task.project;
+            saveTasks(tasks);
+        }
+    } else {
+        addTask(task);
+    }
+
+    onDone();
 };
 
-function fillForm(task) {
-    titleInput.value = task.title
-};

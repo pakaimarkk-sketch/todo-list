@@ -108,3 +108,7 @@ body {
     flex-direction: column;
     gap: 8px;
 }
+
+.completed {
+    text-decoration: line-through;
+}

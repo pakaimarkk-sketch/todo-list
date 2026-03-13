@@ -1,9 +1,11 @@
-import { createTodayView } from "../components/createView";
+import { createThisMonthView, createThisWeekView, createTodayView } from "../components/createView";
 import { createForm } from "../components/createView";
-
+import { renderTasks, removeTask, toggleTask } from "./tasks";
 
 const views = {
-    'today': createTodayView
+    'today': createTodayView,
+    'thisWeek' : createThisWeekView,
+    'thisMonth' : createThisMonthView
 };
   
 export const updateUI = (viewID) => {
@@ -17,32 +19,43 @@ export const updateUI = (viewID) => {
         const taskList = todo.querySelector(".todoList");
         const addTaskButtons = todo.querySelectorAll(".addTaskBtn");
         
+        function rerender() {
+            renderTasks(taskList,
+                (task) => toggleTaskForm(taskList, task, rerender),
+                (taskId) => { removeTask(taskId); rerender(); },
+                (taskId) => { toggleTask(taskId); rerender(); }
+            );
+        }
+
         addTaskButtons.forEach((button) => {
-            button.addEventListener("click", () => toggleTaskForm(taskList));
+            button.addEventListener("click", () => toggleTaskForm(taskList, null, rerender));
         });
+
+        rerender();
     }
 }
 
-export const toggleTaskForm = (taskList) => {
+export const toggleTaskForm = (taskList, taskToEdit = null, onDone) => {
     const mainContainer = document.getElementById("mainContainer");
 
     const existingCard = document.getElementById("taskCard");
     if (existingCard) {
         existingCard.remove();
-        return;
     }
 
-    const card = createForm(taskList);
+    const card = createForm(taskList, taskToEdit, onDone);
     mainContainer.appendChild(card);
 };
 
 export const sidebarBtns = () => {
-    const navbar = document.getElementById("navbar")
+    const navbar = document.getElementById("navDay")
     
     navbar.addEventListener("click", (e) => {
-        if (e.target.tagName === 'BUTTON') {
-            const viewID = e.target.id;
-            updateUI(viewID)
-        }
+        const button = e.target.closest("button");
+        if (!button) return;
+
+        const viewID = button.id;
+        updateUI(viewID);
     });
 }
+

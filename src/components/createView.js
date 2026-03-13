@@ -1,6 +1,8 @@
 import { createEl, createIconButton } from "../utils/dom";
+import { createTask } from "../modules/tasks";
+import { fillForm } from "../modules/tasks";
 
-export const createForm = (taskList) => {
+export const createForm = (taskList, taskToEdit = null, onDone) => {
     const taskCard = createEl("div", "taskCard", null);
     const taskForm = createEl("form", "taskForm", null);
 
@@ -64,15 +66,21 @@ export const createForm = (taskList) => {
     taskCard.append(taskForm);
 
     taskForm.addEventListener("submit", (e) => {
-        e.preventDefault();
-        createTask(taskForm, taskList);
+    e.preventDefault();
+    createTask(taskForm, taskList, taskToEdit?.id ?? null, () => {
         taskForm.reset();
         taskCard.remove();
+        onDone();
+    });
     });
 
     taskCancel.addEventListener("click", () => {
         taskCard.remove();
     });
+
+    if (taskToEdit) {
+        fillForm(taskForm, taskToEdit);
+    }
 
     return taskCard;
 };
@@ -94,13 +102,73 @@ export const createTodayView = () => {
     const todoUl = createEl("ul", null, "todoList");
     wrapper.appendChild(todoUl);
     const todoLi = createEl("li", "todoLi", null);
-    todoLi.textContent = "";
     todoUl.appendChild(todoLi);
 
     return wrapper;
 };
 
+export const createThisWeekView = () => {
+    const wrapper = createEl("div", "weekWrapper", null);
 
+    const todayHeader = createEl("div", "todayHeader", null)
+    wrapper.appendChild(todayHeader)
 
+    const date = createEl("div", "weekView", null)
+    date.textContent = "This Week view"
+    todayHeader.appendChild(date)
 
+    const todayAddTask = createEl("button", null, "addTaskBtn")
+    todayAddTask.textContent = "Add Task"
+    todayHeader.appendChild(todayAddTask)
 
+    const todoUl = createEl("ul", null, "todoList");
+    wrapper.appendChild(todoUl);
+    const todoLi = createEl("li", "todoLi", null);
+    todoUl.appendChild(todoLi);
+
+    return wrapper;
+};
+
+export const createThisMonthView = () => {
+    const wrapper = createEl("div", "weekWrapper", null);
+
+    const todayHeader = createEl("div", "todayHeader", null)
+    wrapper.appendChild(todayHeader)
+
+    const date = createEl("div", "monthView", null)
+    date.textContent = "This Month view"
+    todayHeader.appendChild(date)
+
+    const todayAddTask = createEl("button", null, "addTaskBtn")
+    todayAddTask.textContent = "Add Task"
+    todayHeader.appendChild(todayAddTask)
+
+    const todoUl = createEl("ul", null, "todoList");
+    wrapper.appendChild(todoUl);
+    const todoLi = createEl("li", "todoLi", null);
+    todoUl.appendChild(todoLi);
+
+    return wrapper;
+}
+
+export const projectView = () => {
+    const wrapper = createEl("div", "weekWrapper", null);
+
+    const todayHeader = createEl("div", "todayHeader", null)
+    wrapper.appendChild(todayHeader)
+
+    const date = createEl("div", "projectView", null)
+    date.textContent = "Project view"
+    todayHeader.appendChild(date)
+
+    const todayAddTask = createEl("button", null, "addTaskBtn")
+    todayAddTask.textContent = "Add Task"
+    todayHeader.appendChild(todayAddTask)
+
+    const todoUl = createEl("ul", null, "todoList");
+    wrapper.appendChild(todoUl);
+    const todoLi = createEl("li", "todoLi", null);
+    todoUl.appendChild(todoLi);
+
+    return wrapper;
+}
