@@ -1,17 +1,14 @@
 import path from "node:path";
 import HtmlWebpackPlugin from "html-webpack-plugin";
 
-const isProd = process.env.NODE_ENV === "production";
-
 export default {
-  mode: isProd ? "production" : "development",
-  entry: "./src/index.js",
-  output: {
-    filename: "main.js",
-    path: path.resolve(import.meta.dirname, "dist"),
-    clean: true,
-    publicPath: isProd ? "/todo-list/" : "/",
-  },
+    mode: "development",
+    entry: "./src/index.js",
+    output: {
+        filename: "main.js",
+        path: path.resolve(import.meta.dirname, "dist"),
+        clean: true,
+    },
     plugins: [
         new HtmlWebpackPlugin({
         template: "./src/index.html",
