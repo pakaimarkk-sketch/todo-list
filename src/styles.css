@@ -1,6 +1,10 @@
+html, body {
+  height: 100%;
+  margin: 0;
+}
+
 body {
-    margin: 0;
-    height: 100vh;
+  overflow: hidden;
 }
 
 #mainContainer {
@@ -22,7 +26,7 @@ body {
     text-align: center;
 }
 
-#navProjects button, #today, #thisMonth, #thisWeek {
+#navProjects button, #day, #month, #week {
     padding: 0.5em ;
     margin: 0.8em 0em;
     border: 1px solid black;
@@ -31,8 +35,9 @@ body {
 #main {
     display: grid;
     grid-column: 2 / 3;
-    grid-template-rows: 10% 85% 5%;
+    grid-template-rows: auto 1fr auto;
     border-left: 2px solid black;
+    min-height: 0;
 }
 
 #main header {
@@ -48,7 +53,12 @@ body {
 }
 
 #todo {
-    border: 2px solid red;
+  flex: 1;
+  min-width: 0;
+  min-height: 0;
+  overflow: auto;
+  padding: 12px;
+  box-sizing: border-box;
 }
 
 #mainFooter {
@@ -111,4 +121,276 @@ body {
 
 .completed {
     text-decoration: line-through;
+}
+
+.priority-high {
+  border-left: 4px solid red;
+}
+
+.priority-medium {
+  border-left: 4px solid orange;
+}
+
+.priority-low {
+  border-left: 4px solid green;
+}
+
+#taskPriorityWrapper input[type="radio"] {
+  width: 30px;
+  height: 30px;
+  border-radius: 15px;
+  margin: 2px 0 0 2px;
+  background-color: #F1F1F1;
+}
+
+#h:checked {
+  background-color: red;
+}
+
+#m:checked {
+  background-color: orange;
+}
+
+#l:checked {
+  background-color: green;
+}
+
+#taskPriorityWrapper input[type="radio"]:focus {
+  outline: none;
+}
+
+#taskPriorityWrapper input[type="radio"]:checked ~ span:first-of-type {
+  color: white;
+}
+
+#taskPriorityWrapper label {
+  width: 35px;
+
+  display: inline-block;
+  position: relative;
+}
+
+#taskPriorityWrapper label span {
+  position: absolute;
+  top: 10px;
+  left: 11px;
+  font-size: 15px;
+  color: black;
+}
+
+#taskPriorityWrapper #text,
+#test {
+  float: left;
+
+}
+
+#taskPriorityWrapper #text {
+
+  margin-top: 14px;
+  margin-left: 10px;
+}
+
+#taskPriorityWrapper #test {
+  padding: 6px;
+  background-color: blue;
+  border-radius: 26px;
+}
+
+.week-view {
+  width: 100%;
+  padding: 16px;
+  box-sizing: border-box;
+}
+
+.week-grid {
+  display: grid;
+  grid-template-columns: repeat(7, minmax(0, 1fr));
+  gap: 12px;
+}
+
+.week-column {
+  background: #f8f8f8;
+  border: 1px solid #ddd;
+  border-radius: 12px;
+  display: flex;
+  flex-direction: column;
+  overflow: hidden;
+  min-height: 0;
+}
+
+.week-column-header {
+  padding: 12px;
+  border-bottom: 1px solid #ddd;
+  background: #fff;
+  text-align: center;
+}
+
+.week-day-name {
+  font-weight: 700;
+  font-size: 1rem;
+}
+
+.week-date-label {
+  margin-top: 4px;
+  font-size: 0.9rem;
+  color: #666;
+}
+
+.week-task-list {
+  padding: 10px;
+  display: flex;
+  flex-direction: column;
+  gap: 10px;
+}
+
+.week-task-card {
+  background: #fff;
+  border: 1px solid #ddd;
+  border-radius: 10px;
+  padding: 10px;
+  display: flex;
+  flex-direction: column;
+}
+
+.week-task-top {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  gap: 8px;
+}
+
+.week-task-left {
+  display: flex;
+  align-items: center;
+  gap: 8px;
+  min-width: 0;
+}
+
+.week-task-title {
+  font-size: 0.95rem;
+  font-weight: 600;
+  word-break: break-word;
+}
+
+.week-task-actions {
+  display: flex;
+  gap: 6px;
+}
+
+.task-btn {
+  border: 1px solid #ccc;
+  background: white;
+  border-radius: 6px;
+  padding: 4px 8px;
+  cursor: pointer;
+}
+
+.week-task-details {
+  margin-top: 8px;
+}
+
+.week-task-summary {
+  cursor: pointer;
+  font-size: 0.85rem;
+  color: #444;
+}
+
+.week-task-description {
+  margin: 0;
+  font-size: 0.88rem;
+  color: #555;
+  line-height: 1.4;
+  word-break: break-word;
+}
+.month-view {
+  width: 100%;
+  padding: 16px;
+  box-sizing: border-box;
+}
+
+.month-header {
+  font-size: 1.4rem;
+  font-weight: 700;
+  margin-bottom: 16px;
+}
+
+.month-weekdays {
+  display: grid;
+  grid-template-columns: repeat(7, 1fr);
+  margin-bottom: 8px;
+  gap: 8px;
+}
+
+.month-weekday {
+  text-align: center;
+  font-weight: 600;
+  padding: 8px 0;
+  background: #f3f3f3;
+  border-radius: 8px;
+}
+
+.month-grid {
+  display: grid;
+  grid-template-columns: repeat(7, 1fr);
+  gap: 8px;
+}
+
+.month-cell {
+  min-height: 150px;
+  border: 1px solid #ddd;
+  border-radius: 12px;
+  background: white;
+  padding: 8px;
+  text-align: left;
+  box-sizing: border-box;
+  position: relative;
+  min-width: 0;
+}
+
+.month-day-cell {
+  cursor: pointer;
+}
+
+.month-day-cell:hover {
+  border-color: #999;
+  transform: translateY(-1px);
+}
+
+.empty-cell {
+  background: #f8f8f8;
+}
+
+.month-cell-top {
+  display: flex;
+  justify-content: flex-end;
+}
+
+.month-day-number {
+  position: absolute;
+  top: 8px;
+  right: 10px;
+  font-weight: 700;
+  font-size: 0.9rem;
+}
+
+.month-task-preview {
+  margin-top: 8px;
+  display: flex;
+  flex-direction: column;
+  gap: 4px;
+}
+
+.month-preview-item {
+  font-size: 0.8rem;
+  padding: 4px 6px;
+  border-radius: 6px;
+  background: #f1f1f1;
+  overflow: hidden;
+  text-overflow: ellipsis;
+  white-space: nowrap;
+}
+
+.month-preview-more {
+  font-size: 0.8rem;
+  color: #666;
 }
