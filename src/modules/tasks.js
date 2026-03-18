@@ -1,5 +1,6 @@
 import { createEl, createIconButton } from "../utils/dom";
 import { loadTasks, saveTasks } from "./storage";
+import { formatDateLocal } from "../components/dateHelper";
 
 let tasks = loadTasks() ?? [];
 
@@ -18,7 +19,10 @@ export function createTaskObject(form, defaultDate = null) {
     title: data.get("taskTitle")?.trim() ?? "",
     description: data.get("taskDesc")?.trim() ?? "",
     priority: priorityValue || "medium",
-    dueDate: dueDateValue || defaultDate || new Date().toISOString().split("T")[0],
+    dueDate:
+    dueDateValue ||
+    (defaultDate instanceof Date ? formatDateLocal(defaultDate) : defaultDate) ||
+    formatDateLocal(new Date()),
     project: data.get("taskProject")?.trim() ?? "",
     completed: false,
   };
@@ -151,7 +155,7 @@ export function fillForm(form, task) {
   }
 }
 
-export function createTask(form, editingId = null, onDone, defaultDate = null) {
+export function createTask(form, editingId = null, onDone = () => {}, defaultDate = null) {
   const task = createTaskObject(form, defaultDate);
   const errors = validateTask(task);
 
