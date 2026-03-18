@@ -45,11 +45,6 @@ export function renderWeekTasks(selectedDate, helpers) {
   const taskList = createEl("div", null, "week-task-list");
   const columns = todo.querySelectorAll(".week-column");
   const addTaskButtons = todo.querySelectorAll(".addTaskBtn");
-  
-  console.log("WEEK RENDER");
-  console.log("selectedDate:", selectedDate);
-  console.log("columns found:", columns.length);
-  console.log("add buttons found:", addTaskButtons.length);
 
   if (!columns.length) return;
 

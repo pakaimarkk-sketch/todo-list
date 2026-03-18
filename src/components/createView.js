@@ -8,7 +8,7 @@ import {
     getWeekRangeLabel
 } from "./dateHelper";
 
-export const createForm = (taskList, taskToEdit = null, onDone, defaultDate = null) => {
+export const createForm = (taskToEdit = null, onDone, defaultDate = null) => {
     const taskCard = createEl("div", "taskCard", null);
     const taskForm = createEl("form", "taskForm", null);
 
@@ -80,7 +80,8 @@ export const createForm = (taskList, taskToEdit = null, onDone, defaultDate = nu
     taskDueDate.name = "taskDueDate";
 
     if (defaultDate && !taskToEdit) {
-        taskDueDate.value = new Date(defaultDate).toISOString().split("T")[0];
+        taskDueDate.value =
+            typeof defaultDate === "string" ? defaultDate : formatDateLocal(defaultDate);
     }
 
     const taskProjectL = createEl("label", "taskProjectL", null);
