@@ -12,10 +12,15 @@ import {
   renderMonthTasks,
 } from "./viewRenderers";
 
+import { createNotesView } from "./notes/createNotesView";
+
+import {renderNotesList,displaySelectedNote ,notes,} from "./notes/noteRenderer";
+
 const appState = {
   currentView: "day",
   selectedDate: new Date(),
   selectedProject: null,
+  selectedNote: null,
 };
 
 export const toggleTaskForm = (taskList, taskToEdit = null, onDone, defaultDate = null) => {
@@ -26,7 +31,7 @@ export const toggleTaskForm = (taskList, taskToEdit = null, onDone, defaultDate 
         existingCard.remove();
     }
 
-    const card = createForm(taskList, taskToEdit, onDone, defaultDate);
+    const card = createForm(taskToEdit, onDone, defaultDate);
     mainContainer.appendChild(card);
 };
 
@@ -73,9 +78,47 @@ const views = {
   },
   project: {
     create: () => createProjectView(appState.selectedProject),
+    bind: () => {
+      
+    },
     render: () => {},
-    bind: () => {},
   },
+  notes: {
+    create: () => createNotesView(),
+    bind: () => {
+    const addBtn = document.getElementById("addNoteBtn");
+    const searchInput = document.getElementById("noteSearch");
+    const sortSelect = document.getElementById("noteSort");
+
+    if (addBtn) {
+      addBtn.addEventListener("click", () => {
+        console.log("open note form");
+      });
+    }
+
+    if (searchInput) {
+      searchInput.addEventListener("input", () => {
+
+        updateUI();
+      });
+    }
+
+    if (sortSelect) {
+      sortSelect.addEventListener("change", () => {
+        updateUI();
+      });
+    }
+  },
+    render: () => {
+      const handleSelect = (note) => {
+        appState.selectedNote = note;
+        displaySelectedNote(appState.selectedNote);
+      };
+
+      renderNotesList(notes, handleSelect);
+      displaySelectedNote(appState.selectedNote);
+    },
+  }
 };
 
 
@@ -97,7 +140,7 @@ export function showView(viewName, date = appState.selectedDate) {
   updateUI();
 }
 
-export function setSelectedDate(date) {
+export function setSelectedDate(date, onSelect) {
   appState.selectedDate = new Date(date);
   updateUI();
 }
