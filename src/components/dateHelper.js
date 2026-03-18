@@ -6,13 +6,13 @@ export function formatDateLocal(date) {
 }
 
 export function parseLocalDate(dateString) {
-  const [year, month, day] = dateString.split("-").map(Number);
-  return new Date(year, month - 1, day);
-}
+  if (!dateString || typeof dateString !== "string") return null;
 
-export function getWeekdayName(date) {
-  const names = ["Sun", "Mon", "Tue", "Wed", "Thu", "Fri", "Sat"];
-  return names[date.getDay()];
+  const [year, month, day] = dateString.split("-").map(Number);
+
+  if (!year || !month || !day) return null;
+
+  return new Date(year, month - 1, day);
 }
 
 export function getShortDateLabel(date) {
@@ -55,6 +55,7 @@ export function getEndOfWeek(date) {
 
 export function isSameDay(dateString, selectedDate) {
   const date = parseLocalDate(dateString);
+  if (!date) return false;
 
   return (
     date.getFullYear() === selectedDate.getFullYear() &&
@@ -65,6 +66,7 @@ export function isSameDay(dateString, selectedDate) {
 
 export function isSameWeek(dateString, selectedDate) {
   const date = parseLocalDate(dateString);
+  if (!date) return false;
   const startOfWeek = getStartOfWeek(selectedDate);
   const endOfWeek = getEndOfWeek(selectedDate);
 
@@ -73,6 +75,7 @@ export function isSameWeek(dateString, selectedDate) {
 
 export function isSameMonth(dateString, selectedDate) {
   const date = parseLocalDate(dateString);
+  if (!date) return false;
 
   return (
     date.getFullYear() === selectedDate.getFullYear() &&
