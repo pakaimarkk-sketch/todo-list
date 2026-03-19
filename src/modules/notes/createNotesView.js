@@ -1,4 +1,5 @@
 import { createEl } from "../../utils/dom";
+import { openCreateNote } from "./notesController";
 
 export function createNotesView() {
     const wrapper = createEl("div", "notesView", "notes-view");
@@ -58,15 +59,15 @@ export function createNotesView() {
 
     const viewerActions = createEl("div", null, "selected-note-actions");
 
-    const editBtn = createEl("button", "editNoteBtn", "note-action-btn");
-    editBtn.type = "button";
-    editBtn.textContent = "Edit";
+    const primaryActionBtn = createEl("button", "primaryActionBtn", "note-action-btn");
+    primaryActionBtn.type = "button";
+    primaryActionBtn.textContent = "Edit";
 
     const deleteBtn = createEl("button", "deleteNoteBtn", "note-action-btn");
     deleteBtn.type = "button";
     deleteBtn.textContent = "Delete";
 
-    viewerActions.append(editBtn, deleteBtn);
+    viewerActions.append(primaryActionBtn, deleteBtn);
     viewerHeader.append(viewerTitle, viewerActions);
 
     const viewerMeta = createEl("p", "selectedNoteMeta", "selected-note-meta");

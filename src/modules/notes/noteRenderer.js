@@ -1,8 +1,5 @@
 import { createEl } from "../../utils/dom";
 
-
-
-
 export function displaySelectedNote(note) {
   const titleEl = document.getElementById("selectedNoteTitle");
   const metaEl = document.getElementById("selectedNoteMeta");
@@ -19,6 +16,37 @@ export function displaySelectedNote(note) {
   metaEl.textContent = `Last updated: ${new Date(note.updatedAt).toLocaleString()}`;
   contentEl.textContent = note.content || "Empty note";
 }
+
+export function displayEditableNote(note = null) {
+  const titleEl = document.getElementById("selectedNoteTitle");
+  const metaEl = document.getElementById("selectedNoteMeta");
+  const contentEl = document.getElementById("selectedNoteContent");
+  const primaryActionBtn = document.getElementById("primaryActionBtn");
+
+  titleEl.textContent = "";
+  contentEl.textContent = "";
+  primaryActionBtn.textContent = "Save";
+
+  const titleInput = createEl("input", "noteTitleInput", "note-inline-title");
+  titleInput.type = "text";
+  titleInput.name = "noteTitle";
+  titleInput.placeholder = "New Note";
+  titleInput.value = note?.title ?? "";
+
+
+  const contentInput = createEl("textarea", "noteContentInput", "note-inline-content");
+  contentInput.name = "noteContent";
+  contentInput.placeholder = "Write your note...";
+  contentInput.value = note?.content ?? "";
+
+  metaEl.textContent = note
+    ? `Last updated: ${new Date(note.updatedAt).toLocaleString()}`
+    : "Unsaved note";
+
+  titleEl.appendChild(titleInput);
+  contentEl.appendChild(contentInput);
+}
+
 
 export function renderNoteCard(note, onSelect) {
   const card = createEl("button", null, "note-card");
@@ -38,22 +66,6 @@ export function renderNoteCard(note, onSelect) {
 
   return card;
 }
-export const notes = [
-  {
-    id: "1",
-    title: "First note",
-    content: "This is my first note.",
-    createdAt: Date.now(),
-    updatedAt: Date.now(),
-  },
-  {
-    id: "2",
-    title: "Ideas",
-    content: "Build notes module separately from tasks.",
-    createdAt: Date.now(),
-    updatedAt: Date.now(),
-  },
-];
 
 export function renderNotesList(notes, onSelect) {
   const notesList = document.getElementById("notesList");
@@ -67,3 +79,4 @@ export function renderNotesList(notes, onSelect) {
 export function handleSelect(note) {
   displaySelectedNote(note);
 }
+
