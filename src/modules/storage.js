@@ -15,5 +15,5 @@ export function loadNotes() {
 }
 
 export function saveNotes(notes) {
-  localStorage.setItem(TASKS_KEY, JSON.stringify(notes));
+  localStorage.setItem(NOTES_KEY, JSON.stringify(notes));
 }
