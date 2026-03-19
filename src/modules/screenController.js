@@ -12,9 +12,28 @@ import {
   renderMonthTasks,
 } from "./viewRenderers";
 
-import { createNotesView } from "./notes/createNotesView";
+import { 
+  createNotesView 
+} from "./notes/createNotesView";
 
-import {renderNotesList,displaySelectedNote ,notes,} from "./notes/noteRenderer";
+import { 
+  notesState 
+} from "./notes/notesStates";
+
+import { 
+  openCreateNote, 
+  selectNote, 
+  openEditNote, 
+  handlePrimaryNoteAction
+} from "./notes/notesController";
+
+import {
+  renderNotesList,
+  displaySelectedNote,
+  displayEditableNote,
+} from "./notes/noteRenderer";
+
+import { notes } from "./notes/notes";
 
 const appState = {
   currentView: "day",
@@ -22,6 +41,8 @@ const appState = {
   selectedProject: null,
   selectedNote: null,
 };
+
+
 
 export const toggleTaskForm = (taskList, taskToEdit = null, onDone, defaultDate = null) => {
     const mainContainer = document.getElementById("mainContainer");
@@ -84,41 +105,68 @@ const views = {
     render: () => {},
   },
   notes: {
-    create: () => createNotesView(),
-    bind: () => {
+  create: () => createNotesView(),
+  bind: () => {
     const addBtn = document.getElementById("addNoteBtn");
+    const primaryActionBtn = document.getElementById("primaryActionBtn");
     const searchInput = document.getElementById("noteSearch");
     const sortSelect = document.getElementById("noteSort");
 
     if (addBtn) {
       addBtn.addEventListener("click", () => {
-        console.log("open note form");
+        openCreateNote();
+        updateUI();
+      });
+    }
+
+    if (primaryActionBtn) {
+      primaryActionBtn.addEventListener("click", () => {
+        handlePrimaryNoteAction();
+        updateUI();
       });
     }
 
     if (searchInput) {
       searchInput.addEventListener("input", () => {
-
+        notesState.searchTerm = searchInput.value;
         updateUI();
       });
     }
 
     if (sortSelect) {
       sortSelect.addEventListener("change", () => {
+        notesState.sortBy = sortSelect.value;
         updateUI();
       });
     }
   },
-    render: () => {
-      const handleSelect = (note) => {
-        appState.selectedNote = note;
-        displaySelectedNote(appState.selectedNote);
-      };
+  render: () => {
+    const selectedNote =
+      notes.find((note) => note.id === notesState.selectedNoteId) ?? null;
 
-      renderNotesList(notes, handleSelect);
-      displaySelectedNote(appState.selectedNote);
-    },
-  }
+    renderNotesList(notes, (note) => {
+      selectNote(note.id);
+      updateUI();
+    });
+
+    if (notesState.viewerMode === "create") {
+      displayEditableNote();
+      return;
+    }
+
+    if (notesState.viewerMode === "edit") {
+      displayEditableNote(selectedNote);
+      return;
+    }
+
+    if (notesState.viewerMode === "read") {
+      displaySelectedNote(selectedNote);
+      return;
+    }
+
+    displaySelectedNote(null);
+  },
+}
 };
 
 
