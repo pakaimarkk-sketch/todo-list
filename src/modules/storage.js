@@ -1,6 +1,6 @@
 const TASKS_KEY = "tasks";
 const NOTES_KEY = "notes";
-
+const PROJECTS_KEY = "projects";
 
 export function loadTasks() {
   return JSON.parse(localStorage.getItem(TASKS_KEY)) || [];
@@ -16,4 +16,12 @@ export function loadNotes() {
 
 export function saveNotes(notes) {
   localStorage.setItem(NOTES_KEY, JSON.stringify(notes));
+}
+
+export function saveProjects(projects) {
+  localStorage.setItem(PROJECTS_KEY, JSON.stringify(projects));
+}
+
+export function loadProjects() {
+  return JSON.parse(localStorage.getItem(PROJECTS_KEY)) ?? [];
 }

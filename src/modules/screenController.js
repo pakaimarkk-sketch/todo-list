@@ -36,7 +36,7 @@ import {
 
 import { getSelectedNote, getVisibleNotes} from "./notes/notes";
 
-const appState = {
+export const appState = {
   currentView: "day",
   selectedDate: new Date(),
   selectedProject: null,
@@ -97,13 +97,6 @@ const views = {
       if (nextBtn) nextBtn.addEventListener("click", goToNextMonth);
     },
     render: () => renderMonthTasks(appState.selectedDate, helpers),
-  },
-  project: {
-    create: () => createProjectView(appState.selectedProject),
-    bind: () => {
-      
-    },
-    render: () => {},
   },
   notes: {
   create: () => createNotesView(),
