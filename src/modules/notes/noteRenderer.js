@@ -1,5 +1,6 @@
 import { createEl } from "../../utils/dom";
 
+
 export function displaySelectedNote(note) {
   const titleEl = document.getElementById("selectedNoteTitle");
   const metaEl = document.getElementById("selectedNoteMeta");
@@ -56,7 +57,7 @@ export function renderNoteCard(note, onSelect) {
   title.textContent = note.title || "Untitled";
 
   const preview = createEl("p");
-  preview.textContent = note.content.slice(0, 80) || "Empty note";
+  preview.textContent = note.content || "Empty note";
 
   const meta = createEl("p", null, "note-card-meta");
   meta.textContent = new Date(note.updatedAt).toLocaleString();
@@ -79,4 +80,5 @@ export function renderNotesList(notes, onSelect) {
 export function handleSelect(note) {
   displaySelectedNote(note);
 }
+
 

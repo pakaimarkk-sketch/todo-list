@@ -2,7 +2,7 @@ export const notesState = {
   viewerMode: "empty",
   selectedNoteId: null,
   searchTerm: "",
-  sortBy: "updated",
+  sortBy: "newest",
 };
 
 export const notesStates = {
@@ -35,8 +35,4 @@ export const notesStates = {
     prefillFromSelected: true,
   },
 };
-
-export function getCurrentNoteMode() {
-  return notesStates[notesState.viewerMode];
-}
 

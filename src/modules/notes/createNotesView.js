@@ -1,5 +1,5 @@
 import { createEl } from "../../utils/dom";
-import { openCreateNote } from "./notesController";
+import { notesState } from "./notesStates";
 
 export function createNotesView() {
     const wrapper = createEl("div", "notesView", "notes-view");
@@ -22,6 +22,7 @@ export function createNotesView() {
     searchInput.type = "search";
     searchInput.name = "noteSearch";
     searchInput.placeholder = "Search notes...";
+    searchInput.value = notesState.searchTerm;
 
     const sortSelect = createEl("select", "noteSort", "notes-sort");
     sortSelect.name = "noteSort";
@@ -43,6 +44,7 @@ export function createNotesView() {
     zaOption.textContent = "Z-A";
 
     sortSelect.append(newestOption, oldestOption, azOption, zaOption);
+    sortSelect.value = notesState.sortBy;
 
     controls.append(searchInput, sortSelect);
 

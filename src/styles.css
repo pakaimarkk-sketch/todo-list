@@ -509,3 +509,34 @@ body {
   white-space: pre-wrap;
   line-height: 1.5;
 }
+
+.note-inline-title {
+  width: 100%;
+  border: none;
+  outline: none;
+  background: transparent;
+  font: inherit;
+  font-size: 1.5rem;
+  font-weight: 700;
+  padding: 0;
+  margin: 0;
+}
+
+.note-inline-content {
+  width: 100%;
+  min-height: 220px;
+  border: none;
+  outline: none;
+  background: transparent;
+  font: inherit;
+  font-size: 1rem;
+  line-height: 1.5;
+  padding: 0;
+  margin: 0;
+  resize: none;
+}
+
+.note-inline-title::placeholder,
+.note-inline-content::placeholder {
+  color: #666;
+}

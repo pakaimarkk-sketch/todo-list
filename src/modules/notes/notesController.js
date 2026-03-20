@@ -1,5 +1,5 @@
 import { notesState, notesStates } from "./notesStates";
-import { createNote, updateNote } from "./notes";
+import { createNote, removeNote, updateNote } from "./notes";
 
 export function openCreateNote() {
   notesState.viewerMode = "create";
@@ -45,7 +45,6 @@ export function saveEditedNote() {
   });
 
   notesState.viewerMode = "read";
-
 }
 
 export function saveNewNote() {
@@ -59,4 +58,15 @@ export function saveNewNote() {
 
   notesState.selectedNoteId = newNote.id;
   notesState.viewerMode = "read";
+}
+
+export function deleteCurrentNote() {
+  removeNote(notesState.selectedNoteId);
+  notesState.viewerMode = "empty";
+  notesState.selectedNoteId = null;
+}
+
+export function searchInNotes() {
+  const searchInput = document.getElementById("noteSearch");
+  notesState.searchTerm = searchInput.value.toLowerCase().trim();
 }

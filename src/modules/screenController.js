@@ -23,8 +23,9 @@ import {
 import { 
   openCreateNote, 
   selectNote, 
-  openEditNote, 
-  handlePrimaryNoteAction
+  handlePrimaryNoteAction,
+  deleteCurrentNote,
+  searchInNotes
 } from "./notes/notesController";
 
 import {
@@ -33,7 +34,7 @@ import {
   displayEditableNote,
 } from "./notes/noteRenderer";
 
-import { notes } from "./notes/notes";
+import { getSelectedNote, getVisibleNotes} from "./notes/notes";
 
 const appState = {
   currentView: "day",
@@ -111,6 +112,7 @@ const views = {
     const primaryActionBtn = document.getElementById("primaryActionBtn");
     const searchInput = document.getElementById("noteSearch");
     const sortSelect = document.getElementById("noteSort");
+    const deleteBtn = document.getElementById("deleteNoteBtn")
 
     if (addBtn) {
       addBtn.addEventListener("click", () => {
@@ -126,25 +128,32 @@ const views = {
       });
     }
 
+    if (deleteBtn) {
+      deleteBtn.addEventListener("click", () => {
+        deleteCurrentNote();
+        updateUI();
+    });
+    }
+
     if (searchInput) {
       searchInput.addEventListener("input", () => {
-        notesState.searchTerm = searchInput.value;
-        updateUI();
+        searchInNotes();
+        refreshNotesList();
       });
     }
 
     if (sortSelect) {
       sortSelect.addEventListener("change", () => {
         notesState.sortBy = sortSelect.value;
-        updateUI();
+        refreshNotesList();
       });
     }
   },
   render: () => {
-    const selectedNote =
-      notes.find((note) => note.id === notesState.selectedNoteId) ?? null;
-
-    renderNotesList(notes, (note) => {
+  const visibleNotes = getVisibleNotes(notesState.searchTerm, notesState.sortBy);
+  const selectedNote = getSelectedNote(notesState.selectedNoteId);
+    
+    renderNotesList(visibleNotes, (note) => {
       selectNote(note.id);
       updateUI();
     });
@@ -169,6 +178,14 @@ const views = {
 }
 };
 
+function refreshNotesList() {
+  const visibleNotes = getVisibleNotes(notesState.searchTerm, notesState.sortBy);
+
+  renderNotesList(visibleNotes, (note) => {
+    selectNote(note.id);
+    updateUI();
+  });
+}
 
 export function updateUI() {
   const todo = document.getElementById("todo");
