@@ -6,7 +6,12 @@ import {
   addProject,
 } from "./projects";
 
-import { showView, appState, updateUI } from "../screenController";
+import { showView, appState, } from "../screenController";
+
+export function selectProject(projectName) {
+  appState.selectedProject = projectName;
+  showView("project");
+}
 
 export function openProjectModal() {
   let modal;
@@ -16,7 +21,7 @@ export function openProjectModal() {
       modal.remove();
     },
 
-    onSubmit: formData => {
+    onSubmit: (formData) => {
       const project = createProjectObject(formData);
       const errors = validateProject(project);
 
@@ -26,14 +31,24 @@ export function openProjectModal() {
 
       addProject(project);
 
-      appState.selectedProject = project.name;
-      appState.currentView = "day";
-
       modal.remove();
-      showView("day");
-      updateUI();
+      selectProject(project.name);
     },
   });
 
   document.body.append(modal);
 }
+
+let addProjectBound = false;
+
+export function bindAddProjectButton() {
+  if (addProjectBound) return;
+
+  const addProjects = document.getElementById("addProjects");
+  if (!addProjects) return;
+
+  addProjects.addEventListener("click", openProjectModal);
+  addProjectBound = true;
+}
+
+

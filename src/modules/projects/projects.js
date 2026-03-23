@@ -1,4 +1,4 @@
-import { loadProjects, saveProjects } from "./storage";
+import { loadProjects, saveProjects } from "../storage";
 
 let projects = loadProjects() ?? [];
 
