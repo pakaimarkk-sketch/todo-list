@@ -1,5 +1,6 @@
 import { createEl } from "../utils/dom";
 import { createTask, fillForm } from "../modules/tasks";
+import { getProjects } from "../modules/projects/projects";
 import { 
     formatDateLocal, 
     getWeekDates, 
@@ -8,330 +9,414 @@ import {
     getWeekRangeLabel
 } from "./dateHelper";
 
-export const createForm = (taskToEdit = null, onDone, defaultDate = null) => {
-    const taskCard = createEl("div", "taskCard", null);
-    const taskForm = createEl("form", "taskForm", null);
+ export const createForm = (
+  taskToEdit = null,
+  onDone,
+  defaultDate = null,
+  selectedProject = null
+) => {
+  const overlay = createEl("div", "taskModalOverlay", "modal-overlay");
+  const modal = createEl("div", "taskModal", "modal");
 
-    const taskTitleL = createEl("label", "taskTitleL", null);
-    taskTitleL.textContent = "Title";
-    taskTitleL.htmlFor = "taskTitle";
+  const title = createEl("h2", null, "modal-title");
+  title.textContent = taskToEdit ? "Edit Task" : "Create Task";
 
-    const taskTitle = createEl("input", "taskTitle", null);
-    taskTitle.type = "text";
-    taskTitle.name = "taskTitle";
-    taskTitle.required = true;
+  const taskForm = createEl("form", "taskForm", "task-form");
 
-    const taskDescL = createEl("label", "taskDescL", null);
-    taskDescL.textContent = "Description";
-    taskDescL.htmlFor = "taskDesc";
+  const taskTitleL = createEl("label", null, "project-label");
+  taskTitleL.textContent = "Title";
+  taskTitleL.htmlFor = "taskTitle";
 
-    const taskDesc = createEl("textarea", "taskDesc", null);
-    taskDesc.name = "taskDesc";
+  const taskTitle = createEl("input", "taskTitle", "project-input");
+  taskTitle.type = "text";
+  taskTitle.name = "taskTitle";
+  taskTitle.required = true;
+  taskTitle.placeholder = "Enter task title";
 
-    const taskPriorityWrapper = createEl("div", "taskPriorityWrapper", null);
+  const taskDescL = createEl("label", null, "project-label");
+  taskDescL.textContent = "Description";
+  taskDescL.htmlFor = "taskDesc";
 
-    const taskPriorityL = createEl("p", "taskPriorityL", null);
-    taskPriorityL.textContent = "Priority";
+  const taskDesc = createEl("textarea", "taskDesc", "project-textarea");
+  taskDesc.name = "taskDesc";
+  taskDesc.placeholder = "Optional description";
 
-    const highLabel = createEl("label", null, "priorityLabel");
-    const highInput = createEl("input", "h", null);
-    highInput.type = "radio";
-    highInput.name = "priority";
-    highInput.value = "high";
+  const taskDueDateL = createEl("label", null, "project-label");
+  taskDueDateL.textContent = "Due Date";
+  taskDueDateL.htmlFor = "taskDueDate";
 
-    const highSpan = createEl("span", null, null);
-    highSpan.textContent = "H";
-    highLabel.append(highInput, highSpan);
+  const taskDueDate = createEl("input", "taskDueDate", "project-input");
+  taskDueDate.type = "date";
+  taskDueDate.name = "taskDueDate";
 
-    const mediumLabel = createEl("label", null, "priorityLabel");
-    const mediumInput = createEl("input", "m", null);
-    mediumInput.type = "radio";
-    mediumInput.name = "priority";
-    mediumInput.value = "medium";
-    mediumInput.checked = true;
+  if (defaultDate && !taskToEdit) {
+    taskDueDate.value =
+      typeof defaultDate === "string" ? defaultDate : formatDateLocal(defaultDate);
+  }
 
-    const mediumSpan = createEl("span", null, null);
-    mediumSpan.textContent = "M";
-    mediumLabel.append(mediumInput, mediumSpan);
+  const taskProjectL = createEl("label", null, "project-label");
+  taskProjectL.textContent = "Project";
+  taskProjectL.htmlFor = "taskProject";
 
-    const lowLabel = createEl("label", null, "priorityLabel");
-    const lowInput = createEl("input", "l", null);
-    lowInput.type = "radio";
-    lowInput.name = "priority";
-    lowInput.value = "low";
+  const taskProject = createEl("select", "taskProject", "project-input");
+  taskProject.name = "taskProject";
 
-    const lowSpan = createEl("span", null, null);
-    lowSpan.textContent = "L";
-    lowLabel.append(lowInput, lowSpan);
+  const defaultOption = createEl("option");
+  defaultOption.value = "";
+  defaultOption.textContent = "No project selected";
+  taskProject.appendChild(defaultOption);
 
-    taskPriorityWrapper.append(
-        taskPriorityL,
-        lowLabel,
-        mediumLabel,
-        highLabel
+  const projects = getProjects();
+
+  projects.forEach((project) => {
+    const option = createEl("option");
+    option.value = project.name;
+    option.textContent = project.name;
+    taskProject.appendChild(option);
+  });
+
+  const taskPriorityWrapper = createEl("div", null, "task-priority-group");
+
+  const taskPriorityL = createEl("p", null, "project-label");
+  taskPriorityL.textContent = "Priority";
+
+  const priorityOptions = createEl("div", null, "task-priority-options");
+
+  const highLabel = createEl("label", null, "priorityLabel");
+  const highInput = createEl("input", "h", null);
+  highInput.type = "radio";
+  highInput.name = "priority";
+  highInput.value = "high";
+
+  const highSpan = createEl("span");
+  highSpan.textContent = "H";
+  highLabel.append(highInput, highSpan);
+
+  const mediumLabel = createEl("label", null, "priorityLabel");
+  const mediumInput = createEl("input", "m", null);
+  mediumInput.type = "radio";
+  mediumInput.name = "priority";
+  mediumInput.value = "medium";
+  mediumInput.checked = true;
+
+  const mediumSpan = createEl("span");
+  mediumSpan.textContent = "M";
+  mediumLabel.append(mediumInput, mediumSpan);
+
+  const lowLabel = createEl("label", null, "priorityLabel");
+  const lowInput = createEl("input", "l", null);
+  lowInput.type = "radio";
+  lowInput.name = "priority";
+  lowInput.value = "low";
+
+  const lowSpan = createEl("span");
+  lowSpan.textContent = "L";
+  lowLabel.append(lowInput, lowSpan);
+
+  priorityOptions.append(lowLabel, mediumLabel, highLabel);
+  taskPriorityWrapper.append(taskPriorityL, priorityOptions);
+
+  const errorText = createEl("p", null, "project-form-error");
+
+  const formBtns = createEl("div", null, "modal-actions");
+
+  const taskCancel = createEl("button", null, "modal-cancel-btn");
+  taskCancel.type = "button";
+  taskCancel.textContent = "Cancel";
+
+  const taskSave = createEl("button", null, "modal-submit-btn");
+  taskSave.type = "submit";
+  taskSave.textContent = taskToEdit ? "Save" : "Create";
+
+  formBtns.append(taskCancel, taskSave);
+
+  taskForm.append(
+    taskTitleL,
+    taskTitle,
+    taskDescL,
+    taskDesc,
+    taskDueDateL,
+    taskDueDate,
+    taskProjectL,
+    taskProject,
+    taskPriorityWrapper,
+    errorText,
+    formBtns
+  );
+
+  modal.append(title, taskForm);
+  overlay.append(modal);
+
+  if (taskToEdit?.project) {
+    taskProject.value = taskToEdit.project;
+  } else if (selectedProject) {
+    taskProject.value = selectedProject;
+  }
+
+  taskForm.addEventListener("submit", (e) => {
+    e.preventDefault();
+
+    createTask(
+      taskForm,
+      taskToEdit?.id ?? null,
+      (result) => {
+        if (result?.error) {
+          errorText.textContent = result.error;
+          return;
+        }
+
+        taskForm.reset();
+        overlay.remove();
+        onDone?.();
+      },
+      defaultDate
     );
+  });
 
-    const taskDueDateL = createEl("label", "taskDueDateL", null);
-    taskDueDateL.textContent = "Due Date";
-    taskDueDateL.htmlFor = "taskDueDate";
+  taskCancel.addEventListener("click", () => {
+    overlay.remove();
+  });
 
-    const taskDueDate = createEl("input", "taskDueDate", null);
-    taskDueDate.type = "date";
-    taskDueDate.name = "taskDueDate";
-
-    if (defaultDate && !taskToEdit) {
-        taskDueDate.value =
-            typeof defaultDate === "string" ? defaultDate : formatDateLocal(defaultDate);
+  overlay.addEventListener("click", (e) => {
+    if (e.target === overlay) {
+      overlay.remove();
     }
+  });
 
-    const taskProjectL = createEl("label", "taskProjectL", null);
-    taskProjectL.textContent = "Project";
-    taskProjectL.htmlFor = "taskProject";
+  if (taskToEdit) {
+    fillForm(taskForm, taskToEdit);
+  }
 
-    const taskProject = createEl("input", "taskProject", null);
-    taskProject.type = "text";
-    taskProject.name = "taskProject";
-    taskProject.placeholder = "Project";
+  queueMicrotask(() => taskTitle.focus());
 
-    const formBtns = createEl("div", null, "taskBtns");
-
-    const taskSave = createEl("button", "taskSave", null);
-    taskSave.type = "submit";
-    taskSave.textContent = "Save";
-
-    const taskCancel = createEl("button", "taskCancel", null);
-    taskCancel.type = "button";
-    taskCancel.textContent = "Cancel";
-
-    formBtns.append(taskSave, taskCancel);
-
-    taskForm.append(
-        taskTitleL,
-        taskTitle,
-        taskDescL,
-        taskDesc,
-        taskDueDateL,
-        taskDueDate,
-        taskProjectL,
-        taskProject,
-        taskPriorityWrapper,
-        formBtns
-    );
-
-    taskCard.append(taskForm);
-
-    taskForm.addEventListener("submit", (e) => {
-        e.preventDefault();
-
-        createTask(
-            taskForm,
-            taskToEdit?.id ?? null,
-            () => {
-                taskForm.reset();
-                taskCard.remove();
-                onDone();
-            },
-            defaultDate
-        );
-    });
-
-    taskCancel.addEventListener("click", () => {
-        taskCard.remove();
-    });
-
-    if (taskToEdit) {
-        fillForm(taskForm, taskToEdit);
-    }
-
-    return taskCard;
+  return overlay;
 };
 
 export const createDayView = (selectedDate) => {
-    const wrapper = createEl("div", "todayWrapper", null);
+  const wrapper = createEl("div", "todayWrapper", "view-shell");
 
-    const todayHeader = createEl("div", "todayHeader", null);
-    wrapper.appendChild(todayHeader);
+  const header = createEl("div", null, "view-header");
+  const left = createEl("div", null, "view-header-left");
+  const center = createEl("div", null, "view-header-center");
+  const right = createEl("div", null, "view-header-right");
 
-    const todayAddTask = createEl("button", "dayAddTask", "addTaskBtn");
-    todayAddTask.textContent = "Add Task";
-    todayAddTask.type = "button"
+  const addTaskBtn = createEl("button", "dayAddTask", "btn", "btn-primary");
+  addTaskBtn.type = "button";
+  addTaskBtn.textContent = "Add Task";
 
+  const prevBtn = createEl("button", "prevDayBtn", "btn", "btn-secondary", "btn-icon");
+  prevBtn.type = "button";
+  prevBtn.textContent = "<";
 
-    const leftControls = createEl("div", null, "date-nav");
+  const nextBtn = createEl("button", "nextDayBtn", "btn", "btn-secondary", "btn-icon");
+  nextBtn.type = "button";
+  nextBtn.textContent = ">";
 
-    const prevBtn = createEl("button", "prevDayBtn", "navBtn");
-    prevBtn.type = "button";
-    prevBtn.textContent = "<";
+  const title = createEl("h2", "todayDate", "view-title");
+  title.textContent = selectedDate.toLocaleDateString("en-US", {
+    weekday: "long",
+    year: "numeric",
+    month: "long",
+    day: "numeric",
+  });
 
-    const nextBtn = createEl("button", "nextDayBtn", "navBtn");
-    nextBtn.type = "button";
-    nextBtn.textContent = ">";
+  left.append(addTaskBtn);
+  center.append(prevBtn, title, nextBtn);
+  header.append(left, center, right);
 
-    const date = createEl("div", "todayDate", null);
-    date.textContent = selectedDate.toLocaleDateString("en-US", {
-        weekday: "long",
-        year: "numeric",
-        month: "long",
-        day: "numeric",
-    });
+  const body = createEl("div", null, "view-body");
+  const todoUl = createEl("ul", null, "todoList");
+  body.appendChild(todoUl);
 
-    leftControls.append(prevBtn, date, nextBtn);
-    todayHeader.append(leftControls, todayAddTask);
-
-    const todoUl = createEl("ul", null, "todoList");
-    wrapper.appendChild(todoUl);
-    
-    return wrapper;
+  wrapper.append(header, body);
+  return wrapper;
 };
 
 export function createWeekView(selectedDate) {
-    const wrapper = createEl("div", "weekView", "week-view");
+  const wrapper = createEl("div", "weekView", "view-shell");
 
-    const weekHeader = createEl("div", "todayHeader", null);
-    wrapper.appendChild(weekHeader);
+  const header = createEl("div", null, "view-header");
+  const left = createEl("div", null, "view-header-left");
+  const center = createEl("div", null, "view-header-center");
+  const right = createEl("div", null, "view-header-right");
 
-    const leftControls = createEl("div", null, "date-nav");
+  const addTaskBtn = createEl("button", "weekAddTask", "btn", "btn-primary");
+  addTaskBtn.type = "button";
+  addTaskBtn.textContent = "Add Task";
 
-    const prevBtn = createEl("button", "prevWeekBtn", "navBtn");
-    prevBtn.type = "button";
-    prevBtn.textContent = "<";
+  const prevBtn = createEl("button", "prevWeekBtn", "btn", "btn-secondary", "btn-icon");
+  prevBtn.type = "button";
+  prevBtn.textContent = "<";
 
-    const nextBtn = createEl("button", "nextWeekBtn", "navBtn");
-    nextBtn.type = "button";
-    nextBtn.textContent = ">";
+  const nextBtn = createEl("button", "nextWeekBtn", "btn", "btn-secondary", "btn-icon");
+  nextBtn.type = "button";
+  nextBtn.textContent = ">";
 
-    const title = createEl("div", null, "week-title");
-    title.textContent = getWeekRangeLabel(selectedDate);
+  const title = createEl("h2", null, "view-title");
+  title.textContent = getWeekRangeLabel(selectedDate);
 
-    leftControls.append(prevBtn, title, nextBtn);
+  left.append(addTaskBtn);
+  center.append(prevBtn, title, nextBtn);
+  header.append(left, center, right);
 
-    const weekAddTask = createEl("button", "weekAddTask", "addTaskBtn");
-    weekAddTask.textContent = "Add Task";
-    weekAddTask.type = "button"
+  const body = createEl("div", null, "view-body");
+  const grid = createEl("div", null, "week-grid");
 
-    weekHeader.append(leftControls, weekAddTask);
+  const weekDates = getWeekDates(selectedDate);
+  weekDates.forEach((date) => {
+    const column = createWeekColumn(date);
+    grid.appendChild(column);
+  });
 
-    const grid = createEl("div", null, "week-grid");
-    const weekDates = getWeekDates(selectedDate);
+  body.appendChild(grid);
+  wrapper.append(header, body);
 
-    weekDates.forEach((date) => {
-        const column = createWeekColumn(date);
-        grid.appendChild(column);
-    });
-
-    wrapper.appendChild(grid);
-    return wrapper;
+  return wrapper;
 }
 
 function createWeekColumn(date) {
-    const column = createEl("div", null, "week-column");
-    column.dataset.date = formatDateLocal(date);
+  const column = createEl("div", null, "week-column");
+  column.dataset.date = formatDateLocal(date);
 
-    const header = createEl("div", null, "week-column-header");
-    const dayName = createEl("div", null, "week-day-name");
-    const dateLabel = createEl("div", null, "week-date-label");
-    const taskList = createEl("div", null, "week-task-list");
+  const header = createEl("div", null, "week-column-header");
+  const dayName = createEl("div", null, "week-day-name");
+  const dateLabel = createEl("div", null, "week-date-label");
+  const taskList = createEl("div", null, "week-task-list");
 
-    dayName.textContent = date.toLocaleDateString("en-US", { weekday: "short" });
-    dateLabel.textContent = date.toLocaleDateString("en-US", {
-        day: "numeric",
-        month: "short",
-    });
+  dayName.textContent = date.toLocaleDateString("en-US", { weekday: "short" });
+  dateLabel.textContent = date.toLocaleDateString("en-US", {
+    day: "numeric",
+    month: "short",
+  });
 
-    header.append(dayName, dateLabel);
-    column.append(header, taskList);
+  header.append(dayName, dateLabel);
+  column.append(header, taskList);
 
-    return column;
+  return column;
 }
-
 export function createMonthView(selectedDate) {
-    const wrapper = createEl("div", "monthView", "month-view");
+  const wrapper = createEl("div", "monthView", "view-shell");
 
-    const header = createEl("div", null, "month-header");
+  const header = createEl("div", null, "view-header");
+  const left = createEl("div", null, "view-header-left");
+  const center = createEl("div", null, "view-header-center");
+  const right = createEl("div", null, "view-header-right");
 
-    const prevBtn = createEl("button", "prevMonthBtn", "navBtn");
-    prevBtn.type = "button";
-    prevBtn.textContent = "<";
+  const addTaskBtn = createEl("button", "monthAddTask", "btn", "btn-primary");
+  addTaskBtn.type = "button";
+  addTaskBtn.textContent = "Add Task";
 
-    const title = createEl("div", null, "month-title");
-    title.textContent = `${getMonthName(selectedDate)} ${selectedDate.getFullYear()}`;
+  const prevBtn = createEl("button", "prevMonthBtn", "btn", "btn-secondary", "btn-icon");
+  prevBtn.type = "button";
+  prevBtn.textContent = "<";
 
-    const nextBtn = createEl("button", "nextMonthBtn", "navBtn");
-    nextBtn.type = "button";
-    nextBtn.textContent = ">";
+  const nextBtn = createEl("button", "nextMonthBtn", "btn", "btn-secondary", "btn-icon");
+  nextBtn.type = "button";
+  nextBtn.textContent = ">";
 
-    header.append(prevBtn, title, nextBtn);
+  const title = createEl("h2", null, "view-title");
+  title.textContent = `${getMonthName(selectedDate)} ${selectedDate.getFullYear()}`;
 
-    const weekdayRow = createEl("div", null, "month-weekdays");
-    const weekdayNames = ["Mon", "Tue", "Wed", "Thu", "Fri", "Sat", "Sun"];
+  left.append(addTaskBtn);
+  center.append(prevBtn, title, nextBtn);
+  header.append(left, center, right);
 
-    weekdayNames.forEach(name => {
-        const weekday = createEl("div", null, "month-weekday");
-        weekday.textContent = name;
-        weekdayRow.appendChild(weekday);
-    });
+  const body = createEl("div", null, "view-body");
 
-    const grid = createEl("div", null, "month-grid");
-    const monthDays = getMonthGridDays(selectedDate);
+  const weekdayRow = createEl("div", null, "month-weekdays");
+  const weekdayNames = ["Mon", "Tue", "Wed", "Thu", "Fri", "Sat", "Sun"];
 
-    monthDays.forEach(day => {
-        if (day.type === "empty") {
-            const emptyCell = createEl("div", null, "month-cell", "empty-cell");
-            grid.appendChild(emptyCell);
-            return;
-        }
+  weekdayNames.forEach((name) => {
+    const weekday = createEl("div", null, "month-weekday");
+    weekday.textContent = name;
+    weekdayRow.appendChild(weekday);
+  });
 
-        const cell = createEl("button", null, "month-cell", "month-day-cell");
-        cell.type = "button";
-        cell.dataset.date = formatDateLocal(day.date);
+  const grid = createEl("div", null, "month-grid");
+  const monthDays = getMonthGridDays(selectedDate);
 
-        const top = createEl("div", null, "month-cell-top");
-        const dayNumber = createEl("span", null, "month-day-number");
-        dayNumber.textContent = String(day.date.getDate());
+  monthDays.forEach((day) => {
+    if (day.type === "empty") {
+      const emptyCell = createEl("div", null, "month-cell", "empty-cell");
+      grid.appendChild(emptyCell);
+      return;
+    }
 
-        const preview = createEl("div", null, "month-task-preview");
+    const cell = createEl("button", null, "month-cell", "month-day-cell");
+    cell.type = "button";
+    cell.dataset.date = formatDateLocal(day.date);
 
-        if (day.tasks?.length) {
-            day.tasks.slice(0, 3).forEach(task => {
-                const previewItem = createEl("div", null, "month-preview-item");
-                previewItem.textContent = task.title;
-                preview.appendChild(previewItem);
-            });
+    const top = createEl("div", null, "month-cell-top");
+    const dayNumber = createEl("span", null, "month-day-number");
+    dayNumber.textContent = String(day.date.getDate());
 
-            if (day.tasks.length > 3) {
-                const more = createEl("div", null, "month-preview-more");
-                more.textContent = `+${day.tasks.length - 3} more`;
-                preview.appendChild(more);
-            }
-        }
+    const preview = createEl("div", null, "month-task-preview");
 
-        top.appendChild(dayNumber);
-        cell.append(top, preview);
-        grid.appendChild(cell);
-    });
+    if (day.tasks?.length) {
+      day.tasks.slice(0, 3).forEach((task) => {
+        const previewItem = createEl("div", null, "month-preview-item");
+        previewItem.textContent = task.title;
+        preview.appendChild(previewItem);
+      });
 
-    wrapper.append(header, weekdayRow, grid);
-    return wrapper;
+      if (day.tasks.length > 3) {
+        const more = createEl("div", null, "month-preview-more");
+        more.textContent = `+${day.tasks.length - 3} more`;
+        preview.appendChild(more);
+      }
+    }
+
+    top.appendChild(dayNumber);
+    cell.append(top, preview);
+    grid.appendChild(cell);
+  });
+
+  body.append(weekdayRow, grid);
+  wrapper.append(header, body);
+
+  return wrapper;
 }
 
-export const createProjectView = () => {
-    const wrapper = createEl("div", "weekWrapper", null);
+export function createProjectView(projectName, selectedDate, projectSubView) {
+  const wrapper = createEl("div", "projectWrapper", "view-shell");
 
-    const todayHeader = createEl("div", "todayHeader", null);
-    wrapper.appendChild(todayHeader);
+  const header = createEl("div", null, "view-header");
+  const left = createEl("div", null, "view-header-left");
+  const right = createEl("div", null, "view-header-right");
 
-    const date = createEl("div", "projectView", null);
-    date.textContent = "Project view";
-    todayHeader.appendChild(date);
+  const title = createEl("h2", null, "view-title");
+  title.textContent = projectName ? `Project: ${projectName}` : "Project: Untitled";
 
-    const todayAddTask = createEl("button", null, "addTaskBtn");
-    todayAddTask.textContent = "Add Task";
-    todayHeader.appendChild(todayAddTask);
+  const nav = createEl("div", null, "project-subnav");
 
-    const todoUl = createEl("ul", null, "todoList");
-    wrapper.appendChild(todoUl);
-    const todoLi = createEl("li", "todoLi", null);
-    todoUl.appendChild(todoLi);
+  const dayBtn = createEl("button", "projectDayBtn", "btn", "btn-secondary");
+  dayBtn.textContent = "Day";
 
-    return wrapper;
+  const weekBtn = createEl("button", "projectWeekBtn", "btn", "btn-secondary");
+  weekBtn.textContent = "Week";
+
+  const monthBtn = createEl("button", "projectMonthBtn", "btn", "btn-secondary");
+  monthBtn.textContent = "Month";
+
+  nav.append(dayBtn, weekBtn, monthBtn);
+  left.append(title);
+  right.append(nav);
+  header.append(left, right);
+
+  const body = createEl("div", "projectContent", "view-body");
+
+  let reusedView;
+
+  if (projectSubView === "day") {
+    reusedView = createDayView(selectedDate);
+  } else if (projectSubView === "week") {
+    reusedView = createWeekView(selectedDate);
+  } else {
+    reusedView = createMonthView(selectedDate);
+  }
+
+  body.appendChild(reusedView);
+  wrapper.append(header, body);
+
+  return wrapper;
 }
