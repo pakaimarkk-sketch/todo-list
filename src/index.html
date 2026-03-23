@@ -7,34 +7,40 @@
 </head>
 <body>
     <div id="mainContainer">
-        <div id="navbar">
-            <div id="navLogo">Logo</div>
-
-            <div id="navDay"> 
-                <div>
-                    <button type="button" id="day">Today</button>
-                </div>
-
-                <div>
-                    <button type="button" id="week">Week</button>
-                </div>
-
-                <div>
-                    <button type="button" id="month">Month</button>
-                </div>
-                <div>
-                    <button type="button" id="notes">Notes</button>
-                </div>
-            </div>
-
-            
-
-            <div id="navProjects">
-                <button type="button" id="addProjects">Add Project</button>
-
-            </div>
-            
+    <aside id="navbar">
+        <div class="sidebar-section sidebar-brand">
+        <div id="navLogo">
+        <span class="logo-title">TaskFlow</span>
+    </div>
         </div>
+
+        <div class="sidebar-section">
+            <p class="sidebar-label">Planning</p>
+            <div id="navDay" class="sidebar-nav">
+                <button type="button" id="day" class="btn btn-secondary">Today</button>
+                <button type="button" id="week" class="btn btn-secondary">Week</button>
+                <button type="button" id="month" class="btn btn-secondary">Month</button>
+            </div>
+        </div>
+
+        <div class="sidebar-section">
+            <p class="sidebar-label">Workspace</p>
+            <div class="sidebar-nav">
+                <button type="button" id="notes" class="btn btn-secondary">Notes</button>
+            </div>
+        </div>
+
+        <div class="sidebar-section sidebar-projects">
+            <div class="sidebar-section-header">
+                <p class="sidebar-label">Projects</p>
+            </div>
+
+            <div id="navProjects" class="sidebar-nav">
+                <button type="button" id="addProjects" class="btn btn-primary">Add Project</button>
+                <div id="projectsList"></div>
+            </div>
+        </div>
+    </aside>
 
         <div id="main">
             <header><p>To-Do List</p></header>
