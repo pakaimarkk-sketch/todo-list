@@ -17,7 +17,7 @@ export function renderDayTasks(selectedDate, helpers) {
     renderTasks(
       dayTasks,
       taskList,
-      (task) => openTaskForm(taskList, task, rerender, selectedDate),
+      (task) => openTaskForm(taskList, task, rerender, selectedDate, null),
       (taskId) => {
         removeTask(taskId);
         rerender();
@@ -31,7 +31,7 @@ export function renderDayTasks(selectedDate, helpers) {
 
   addTaskButtons.forEach((button) => {
     button.addEventListener("click", () => {
-      openTaskForm(taskList, null, rerender, selectedDate);
+      openTaskForm(taskList, null, rerender, selectedDate, null);
     });
   });
 
@@ -64,7 +64,7 @@ export function renderWeekTasks(selectedDate, helpers) {
       dayTasks.forEach((task) => {
         const taskCard = createWeekTaskCard(
           task,
-          (task) => openTaskForm(taskList, task, rerender, new Date(columnDate)),
+          (task) => openTaskForm(taskList, task, rerender, new Date(columnDate), null),
           (taskId) => {
             removeTask(taskId);
             rerender();
@@ -82,7 +82,7 @@ export function renderWeekTasks(selectedDate, helpers) {
 
   addTaskButtons.forEach((button) => {
     button.addEventListener("click", () => {
-      openTaskForm(null, null, () => renderWeekTasks(selectedDate, helpers), selectedDate);
+      openTaskForm(null, null, () => renderWeekTasks(selectedDate, helpers), selectedDate, null);
     });
   });
 
@@ -134,8 +134,8 @@ function createWeekTaskCard(task, onEdit, onDelete, onToggle) {
   const editBtn = createIconButton(
     "Edit task",
     `
-    <svg viewBox="0 0 24 24" width="20" height="20" aria-hidden="true">
-      <path d="M4 20h4l10.5-10.5a1.4 1.4 0 0 0 0-2L16.5 5.5a1.4 1.4 0 0 0-2 0L4 16v4z"></path>
+    <svg viewBox="0 0 24 24" aria-hidden="true">
+    <path d="M4 17.25V20h2.75L17.81 8.94l-2.75-2.75L4 17.25zm15.71-9.04a1.003 1.003 0 0 0 0-1.42l-2.5-2.5a1.003 1.003 0 0 0-1.42 0l-1.96 1.96 3.92 3.92 1.96-1.96z"></path>
     </svg>
     `,
     "iconBtn",
@@ -145,8 +145,8 @@ function createWeekTaskCard(task, onEdit, onDelete, onToggle) {
   const deleteBtn = createIconButton(
     "Delete task",
     `
-    <svg viewBox="0 0 24 24" width="20" height="20" aria-hidden="true">
-      <path d="M9 3h6l1 2h4v2H4V5h4l1-2zm1 6h2v8h-2V9zm4 0h2v8h-2V9zM7 9h2v8H7V9z"></path>
+    <svg viewBox="0 0 24 24" aria-hidden="true">
+    <path d="M6 7h12l-1 14H7L6 7zm3-3h6l1 2H8l1-2z"></path>
     </svg>
     `,
     "iconBtn",
@@ -198,4 +198,6 @@ export function renderMonthTasks(selectedDate, helpers) {
       onDayClick(cellDate);
     });
   });
+
+
 }
