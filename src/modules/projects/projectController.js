@@ -9,6 +9,7 @@ import {
 } from "./projects";
 import { renameTaskProject, clearTaskProject } from "../tasks";
 import { showView, appState, updateUI } from "../screenController";
+import { renderProjectList } from "./projectNav";
 
 export function selectProject(projectName) {
   appState.selectedProject = projectName;
@@ -32,6 +33,7 @@ export function openProjectModal() {
       }
 
       addProject(project);
+      renderProjectList();
 
       modal.remove();
       selectProject(project.name);
@@ -85,6 +87,7 @@ export function openEditProjectModal(projectId) {
       }
 
       modal.remove();
+      renderProjectList();
       updateUI();
     },
   });

@@ -45,6 +45,8 @@ export function displayEditableNote(note = null) {
 
   titleEl.appendChild(titleInput);
   contentEl.appendChild(contentInput);
+
+  queueMicrotask(() => contentInput.focus());
 }
 
 
@@ -56,7 +58,7 @@ export function renderNoteCard(note, onSelect) {
   title.textContent = note.title || "Untitled";
 
   const preview = createEl("p");
-  preview.textContent = note.content.slice(0, 30) + "...." || "Empty note";
+  preview.textContent = note.content.slice(0, 20) + "...." || "Empty note";
 
   const meta = createEl("p", null, "note-card-meta");
   meta.textContent = new Date(note.updatedAt).toLocaleString();

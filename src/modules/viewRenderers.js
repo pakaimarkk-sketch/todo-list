@@ -167,7 +167,7 @@ export function renderMonthTasks(selectedDate, helpers) {
 
   const todo = document.getElementById("todo");
   const monthGrid = todo.querySelector(".month-grid");
-  const addTaskBtn = todo.querySelector("#monthAddTask");
+  const addTaskButtons = todo.querySelectorAll(".addTaskBtn");
 
   if (!monthGrid) return;
 
@@ -203,13 +203,11 @@ export function renderMonthTasks(selectedDate, helpers) {
     paintMonthPreviews();
   }
 
-  if (addTaskBtn) {
-      addTaskButtons.forEach((button) => {
-        button.onclick = () => {
+  addTaskButtons.forEach((button) => {
+      button.onclick = () => {
         openTaskForm(null, null, rerender, selectedDate, null);
-    };
-});
-  }
+      };
+  });
 
   const dayCells = monthGrid.querySelectorAll("[data-date]");
   dayCells.forEach((cell) => {

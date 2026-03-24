@@ -78,7 +78,7 @@ export function bindProjectNavButtons() {
       if (!projectId) return;
 
       deleteProject(projectId);
-      renderProjectButtons();
+      renderProjectList();
       return;
     }
 
