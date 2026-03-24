@@ -49,7 +49,7 @@ export function renderProjectWeekTasks(projectName, selectedDate, helpers) {
   if (!columns.length) return;
 
   function rerender() {
-    const weekTasks = getWeekTasks(selectedDate);
+    const weekTasks = getProjectWeekTasks(projectName, selectedDate);
     const columns = todo.querySelectorAll(".week-column");
     const addTaskButtons = todo.querySelectorAll(".addTaskBtn");
 

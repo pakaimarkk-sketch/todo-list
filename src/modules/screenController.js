@@ -138,7 +138,7 @@ export function setSelectedDate(date, onSelect) {
 }
 
 export const sidebarBtns = () => {
-  const navbar = document.getElementById("navDay");
+  const navbar = document.getElementById("navbar");
 
   navbar.addEventListener("click", (e) => {
     const button = e.target.closest("button");
@@ -146,12 +146,16 @@ export const sidebarBtns = () => {
 
     const viewID = button.id;
 
+    if (viewID === "addProjects") return;
+
     if (viewID === "day") {
       showView("day", new Date());
       return;
     }
 
-    showView(viewID);
+    if (viewID === "week" || viewID === "month" || viewID === "notes") {
+      showView(viewID);
+    }
   });
 };
 
@@ -313,6 +317,12 @@ export function projectViewBind() {
   const monthBtn = document.getElementById("projectMonthBtn");
 
   if (dayBtn) {
+    const prevBtn = document.getElementById("prevDayBtn");
+    const nextBtn = document.getElementById("nextDayBtn");
+
+    if (prevBtn) prevBtn.addEventListener("click", goToPrevDay);
+    if (nextBtn) nextBtn.addEventListener("click", goToNextDay);
+
     dayBtn.addEventListener("click", () => {
       appState.projectSubView = "day";
       updateUI();
@@ -320,6 +330,11 @@ export function projectViewBind() {
   }
 
   if (weekBtn) {
+    const prevBtn = document.getElementById("prevWeekBtn");
+    const nextBtn = document.getElementById("nextWeekBtn");
+
+    if (prevBtn) prevBtn.addEventListener("click", goToPrevWeek);
+    if (nextBtn) nextBtn.addEventListener("click", goToNextWeek);
     weekBtn.addEventListener("click", () => {
       appState.projectSubView = "week";
       updateUI();
@@ -327,6 +342,12 @@ export function projectViewBind() {
   }
 
   if (monthBtn) {
+    const prevBtn = document.getElementById("prevMonthBtn");
+    const nextBtn = document.getElementById("nextMonthBtn");
+
+    if (prevBtn) prevBtn.addEventListener("click", goToPrevMonth);
+    if (nextBtn) nextBtn.addEventListener("click", goToNextMonth);
+
     monthBtn.addEventListener("click", () => {
       appState.projectSubView = "month";
       updateUI();

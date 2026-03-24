@@ -134,8 +134,8 @@ function createWeekTaskCard(task, onEdit, onDelete, onToggle) {
   const editBtn = createIconButton(
     "Edit task",
     `
-    <svg viewBox="0 0 24 24" aria-hidden="true">
-    <path d="M4 17.25V20h2.75L17.81 8.94l-2.75-2.75L4 17.25zm15.71-9.04a1.003 1.003 0 0 0 0-1.42l-2.5-2.5a1.003 1.003 0 0 0-1.42 0l-1.96 1.96 3.92 3.92 1.96-1.96z"></path>
+    <svg viewBox="0 0 24 24" width="20" height="20" aria-hidden="true">
+      <path d="M4 20h4l10.5-10.5a1.4 1.4 0 0 0 0-2L16.5 5.5a1.4 1.4 0 0 0-2 0L4 16v4z"></path>
     </svg>
     `,
     "iconBtn",
@@ -163,41 +163,58 @@ function createWeekTaskCard(task, onEdit, onDelete, onToggle) {
 }
 
 export function renderMonthTasks(selectedDate, helpers) {
-  const { onDayClick } = helpers;
+  const { onDayClick, openTaskForm } = helpers;
 
   const todo = document.getElementById("todo");
   const monthGrid = todo.querySelector(".month-grid");
+  const addTaskBtn = todo.querySelector("#monthAddTask");
+
   if (!monthGrid) return;
 
-  const monthTasks = getMonthTasks(selectedDate);
-  const dayCells = monthGrid.querySelectorAll("[data-date]");
+  function paintMonthPreviews() {
+    const monthTasks = getMonthTasks(selectedDate);
+    const dayCells = monthGrid.querySelectorAll("[data-date]");
 
-  dayCells.forEach((cell) => {
-    const cellDate = cell.dataset.date;
-    const preview = cell.querySelector(".month-task-preview");
+    dayCells.forEach((cell) => {
+      const cellDate = cell.dataset.date;
+      const preview = cell.querySelector(".month-task-preview");
 
-    if (!preview) return;
+      if (!preview) return;
 
-    preview.textContent = "";
+      preview.textContent = "";
 
-    const cellTasks = monthTasks.filter((task) => task.dueDate === cellDate);
+      const cellTasks = monthTasks.filter((task) => task.dueDate === cellDate);
 
-    cellTasks.slice(0, 3).forEach((task) => {
-      const previewItem = createEl("div", null, "month-preview-item");
-      previewItem.textContent = task.title;
-      preview.appendChild(previewItem);
+      cellTasks.slice(0, 3).forEach((task) => {
+        const previewItem = createEl("div", null, "month-preview-item");
+        previewItem.textContent = task.title;
+        preview.appendChild(previewItem);
+      });
+
+      if (cellTasks.length > 3) {
+        const more = createEl("div", null, "month-preview-more");
+        more.textContent = `+${cellTasks.length - 3} more`;
+        preview.appendChild(more);
+      }
     });
+  }
 
-    if (cellTasks.length > 3) {
-      const more = createEl("div", null, "month-preview-more");
-      more.textContent = `+${cellTasks.length - 3} more`;
-      preview.appendChild(more);
-    }
+  function rerender() {
+    paintMonthPreviews();
+  }
 
+  if (addTaskBtn) {
+    addTaskBtn.addEventListener("click", () => {
+      openTaskForm(null, null, rerender, selectedDate, null);
+    });
+  }
+
+  const dayCells = monthGrid.querySelectorAll("[data-date]");
+  dayCells.forEach((cell) => {
     cell.addEventListener("click", () => {
-      onDayClick(cellDate);
+      onDayClick(cell.dataset.date);
     });
   });
 
-
+  rerender();
 }

@@ -1,6 +1,7 @@
-import { createEl, createIconButton } from "../utils/dom";
+import { createEl, createIconButton, } from "../utils/dom";
 import { loadTasks, saveTasks } from "./storage";
 import { formatDateLocal } from "../components/dateHelper";
+
 
 let tasks = loadTasks() ?? [];
 
@@ -106,8 +107,8 @@ function renderTask(task, onEdit, onDelete, onToggle) {
   const deleteBtn = createIconButton(
     "Delete task",
     `
-    <svg viewBox="0 0 24 24" width="20" height="20" aria-hidden="true">
-      <path d="M9 3h6l1 2h4v2H4V5h4l1-2zm1 6h2v8h-2V9zm4 0h2v8h-2V9zM7 9h2v8H7V9z"></path>
+    <svg viewBox="0 0 24 24" aria-hidden="true">
+    <path d="M6 7h12l-1 14H7L6 7zm3-3h6l1 2H8l1-2z"></path>
     </svg>
     `,
     "iconBtn",

@@ -12,3 +12,13 @@ export const createIconButton = (label, svgMarkup, ...classes) => {
    button.innerHTML = svgMarkup;
    return button;
 };
+
+export function updatePriorityDisplay(value) {
+  const labels = {
+    low: "Priority: Low",
+    medium: "Priority: Medium",
+    high: "Priority: High",
+  };
+
+  priorityDisplay.textContent = labels[value] || "Priority: Medium";
+}

@@ -1,4 +1,4 @@
-import { createEl } from "../utils/dom";
+import { createEl, updatePriorityDisplay } from "../utils/dom";
 import { createTask, fillForm } from "../modules/tasks";
 import { getProjects } from "../modules/projects/projects";
 import { 
@@ -75,46 +75,63 @@ import {
     taskProject.appendChild(option);
   });
 
-  const taskPriorityWrapper = createEl("div", null, "task-priority-group");
+const taskPriorityWrapper = createEl("div", null, "task-priority-group");
 
-  const taskPriorityL = createEl("p", null, "project-label");
-  taskPriorityL.textContent = "Priority";
+const taskPriorityL = createEl("p", null, "project-label");
 
-  const priorityOptions = createEl("div", null, "task-priority-options");
+function updatePriorityDisplay(value) {
+  const labels = {
+    low: "Priority: Low",
+    medium: "Priority: Medium",
+    high: "Priority: High",
+  };
 
-  const highLabel = createEl("label", null, "priorityLabel");
-  const highInput = createEl("input", "h", null);
-  highInput.type = "radio";
-  highInput.name = "priority";
-  highInput.value = "high";
+  taskPriorityL.textContent = labels[value] || "Priority: Medium";
+}
 
-  const highSpan = createEl("span");
-  highSpan.textContent = "H";
-  highLabel.append(highInput, highSpan);
+const priorityOptions = createEl("div", null, "task-priority-options");
 
-  const mediumLabel = createEl("label", null, "priorityLabel");
-  const mediumInput = createEl("input", "m", null);
-  mediumInput.type = "radio";
-  mediumInput.name = "priority";
-  mediumInput.value = "medium";
-  mediumInput.checked = true;
+const highLabel = createEl("label", null, "priorityLabel");
+const highInput = createEl("input", "h", null);
+highInput.type = "radio";
+highInput.name = "priority";
+highInput.value = "high";
 
-  const mediumSpan = createEl("span");
-  mediumSpan.textContent = "M";
-  mediumLabel.append(mediumInput, mediumSpan);
+const highSpan = createEl("span");
+highSpan.textContent = "H";
+highLabel.append(highInput, highSpan);
 
-  const lowLabel = createEl("label", null, "priorityLabel");
-  const lowInput = createEl("input", "l", null);
-  lowInput.type = "radio";
-  lowInput.name = "priority";
-  lowInput.value = "low";
+const mediumLabel = createEl("label", null, "priorityLabel");
+const mediumInput = createEl("input", "m", null);
+mediumInput.type = "radio";
+mediumInput.name = "priority";
+mediumInput.value = "medium";
+mediumInput.checked = true;
 
-  const lowSpan = createEl("span");
-  lowSpan.textContent = "L";
-  lowLabel.append(lowInput, lowSpan);
+const mediumSpan = createEl("span");
+mediumSpan.textContent = "M";
+mediumLabel.append(mediumInput, mediumSpan);
 
-  priorityOptions.append(lowLabel, mediumLabel, highLabel);
-  taskPriorityWrapper.append(taskPriorityL, priorityOptions);
+const lowLabel = createEl("label", null, "priorityLabel");
+const lowInput = createEl("input", "l", null);
+lowInput.type = "radio";
+lowInput.name = "priority";
+lowInput.value = "low";
+
+const lowSpan = createEl("span");
+lowSpan.textContent = "L";
+lowLabel.append(lowInput, lowSpan);
+
+[lowInput, mediumInput, highInput].forEach((input) => {
+  input.addEventListener("change", () => {
+    updatePriorityDisplay(input.value);
+  });
+});
+
+updatePriorityDisplay("medium");
+
+priorityOptions.append(lowLabel, mediumLabel, highLabel);
+taskPriorityWrapper.append(taskPriorityL, priorityOptions);
 
   const errorText = createEl("p", null, "project-form-error");
 
@@ -200,7 +217,7 @@ export const createDayView = (selectedDate) => {
   const center = createEl("div", null, "view-header-center");
   const right = createEl("div", null, "view-header-right");
 
-  const addTaskBtn = createEl("button", "dayAddTask", "btn", "btn-primary");
+  const addTaskBtn = createEl("button", "dayAddTask", "btn", "btn-primary", "addTaskBtn");
   addTaskBtn.type = "button";
   addTaskBtn.textContent = "Add Task";
 
@@ -240,7 +257,7 @@ export function createWeekView(selectedDate) {
   const center = createEl("div", null, "view-header-center");
   const right = createEl("div", null, "view-header-right");
 
-  const addTaskBtn = createEl("button", "weekAddTask", "btn", "btn-primary");
+  const addTaskBtn = createEl("button", "weekAddTask", "btn", "btn-primary", "addTaskBtn");
   addTaskBtn.type = "button";
   addTaskBtn.textContent = "Add Task";
 
@@ -302,7 +319,7 @@ export function createMonthView(selectedDate) {
   const center = createEl("div", null, "view-header-center");
   const right = createEl("div", null, "view-header-right");
 
-  const addTaskBtn = createEl("button", "monthAddTask", "btn", "btn-primary");
+  const addTaskBtn = createEl("button", "monthAddTask", "btn", "btn-primary", "addTaskBtn");
   addTaskBtn.type = "button";
   addTaskBtn.textContent = "Add Task";
 
