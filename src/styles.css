@@ -451,16 +451,21 @@ select {
 .notes-view {
   display: grid;
   grid-template-columns: 320px 1fr;
-  min-height: 80vh;
-  border: 1px solid #ccc;
+  flex: 1;
+  min-height: 0;
+  background: var(--surface);
+  border-radius: var(--radius-lg);
+  overflow: hidden;
 }
 
 .notes-sidebar {
   display: flex;
   flex-direction: column;
-  border-right: 1px solid #ccc;
-  padding: 1rem;
-  gap: 1rem;
+  border-right: 1px solid var(--border);
+  padding: var(--space-4);
+  gap: var(--space-3);
+  background: var(--surface-muted);
+  min-height: 0;
 }
 
 .notes-sidebar-header {
@@ -474,10 +479,20 @@ select {
   font-size: 1.5rem;
 }
 
-.add-note-btn {
-  padding: 0.85rem 1rem;
-  font-size: 1rem;
+.add-note-btn,
+.note-action-btn {
+  border: 1px solid var(--border);
+  background: var(--surface);
+  color: var(--text);
+  border-radius: var(--radius-sm);
+  padding: 0.7rem 1rem;
   cursor: pointer;
+  transition: 0.2s ease;
+}
+
+.add-note-btn:hover,
+.note-action-btn:hover {
+  background: #f1f4f9;
 }
 
 .notes-controls {
@@ -488,8 +503,11 @@ select {
 
 .notes-search,
 .notes-sort {
-  padding: 0.75rem;
-  font-size: 1rem;
+  padding: 0.75rem 0.9rem;
+  border: 1px solid var(--border);
+  border-radius: var(--radius-sm);
+  background: var(--surface);
+  color: var(--text);
 }
 
 .notes-list {
@@ -497,12 +515,20 @@ select {
   flex-direction: column;
   gap: 0.75rem;
   overflow-y: auto;
+  min-height: 0;
 }
 
 .note-card {
-  padding: 0.9rem;
-  border: 1px solid #ccc;
+  padding: 1rem;
+  border: 1px solid var(--border);
+  border-radius: var(--radius-md);
+  background: var(--surface);
   cursor: pointer;
+  transition: 0.2s ease;
+}
+
+.note-card:hover {
+  background: #f1f4f9;
 }
 
 .note-card h3,
@@ -524,8 +550,10 @@ select {
 .notes-viewer {
   display: flex;
   flex-direction: column;
-  padding: 1rem;
-  gap: 1rem;
+  padding: var(--space-4);
+  gap: var(--space-3);
+  background: var(--surface);
+  min-height: 0;
 }
 
 .notes-viewer-header {
@@ -543,11 +571,6 @@ select {
 .selected-note-actions {
   display: flex;
   gap: 0.5rem;
-}
-
-.note-action-btn {
-  padding: 0.6rem 0.9rem;
-  cursor: pointer;
 }
 
 .selected-note-meta {
@@ -589,7 +612,7 @@ select {
 
 .note-inline-title::placeholder,
 .note-inline-content::placeholder {
-  color: #666;
+  color: var(--text-soft);
 }
 
 .modal-overlay {
