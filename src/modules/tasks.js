@@ -174,5 +174,22 @@ export function createTask(form, editingId = null, onDone = () => {}, defaultDat
   onDone();
 }
 
+export function renameTaskProject(oldProjectName, newProjectName) {
+  tasks.forEach((task) => {
+    if (task.project === oldProjectName) {
+      task.project = newProjectName;
+    }
+  });
 
+  saveTasks(tasks);
+}
 
+export function clearTaskProject(projectName) {
+  tasks.forEach((task) => {
+    if (task.project === projectName) {
+      task.project = "";
+    }
+  });
+
+  saveTasks(tasks);
+}

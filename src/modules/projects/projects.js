@@ -15,14 +15,25 @@ export function createProjectObject(data) {
   };
 }
 
-export function validateProject(project) {
+export function updateProject(projectId, updatedValues) {
+  const project = projects.find((project) => project.id === projectId);
+  if (!project) return;
+
+  project.name = updatedValues.name;
+  project.description = updatedValues.description;
+  saveProjects(projects);
+}
+
+export function validateProject(project, editingId = null) {
   const errors = [];
 
   if (!project.name) errors.push("Project name is required");
 
-  const nameExists = projects.some(
-    existing => existing.name.toLowerCase() === project.name.toLowerCase()
-  );
+  const nameExists = projects.some((existing) => {
+    const sameName = existing.name.toLowerCase() === project.name.toLowerCase();
+    const differentProject = existing.id !== editingId;
+    return sameName && differentProject;
+  });
 
   if (nameExists) errors.push("Project name already exists");
 

@@ -1,12 +1,14 @@
 import { createProjectModal } from "./createProjectModal";
-
 import {
   createProjectObject,
   validateProject,
   addProject,
+  getProjectById,
+  updateProject,
+  removeProject,
 } from "./projects";
-
-import { showView, appState, } from "../screenController";
+import { renameTaskProject, clearTaskProject } from "../tasks";
+import { showView, appState, updateUI } from "../screenController";
 
 export function selectProject(projectName) {
   appState.selectedProject = projectName;
@@ -39,6 +41,57 @@ export function openProjectModal() {
   document.body.append(modal);
 }
 
+export function openEditProjectModal(projectId) {
+  const existingProject = getProjectById(projectId);
+  if (!existingProject) return;
+
+  let modal;
+
+  modal = createProjectModal({
+    initialValues: {
+      name: existingProject.name,
+      description: existingProject.description,
+    },
+    titleText: "Edit Project",
+    submitText: "Save",
+    onCancel: () => {
+      modal.remove();
+    },
+    onSubmit: (formData) => {
+      const updatedProject = {
+        ...existingProject,
+        name: formData.name,
+        description: formData.description,
+      };
+
+      const errors = validateProject(updatedProject, existingProject.id);
+      if (errors.length > 0) {
+        return { error: errors[0] };
+      }
+
+      const oldName = existingProject.name;
+
+      updateProject(existingProject.id, {
+        name: formData.name,
+        description: formData.description,
+      });
+
+      if (oldName !== formData.name) {
+        renameTaskProject(oldName, formData.name);
+
+        if (appState.selectedProject === oldName) {
+          appState.selectedProject = formData.name;
+        }
+      }
+
+      modal.remove();
+      updateUI();
+    },
+  });
+
+  document.body.append(modal);
+}
+
 let addProjectBound = false;
 
 export function bindAddProjectButton() {
@@ -51,4 +104,17 @@ export function bindAddProjectButton() {
   addProjectBound = true;
 }
 
+export function deleteProject(projectId) {
+  const project = getProjectById(projectId);
+  if (!project) return;
 
+  clearTaskProject(project.name);
+  removeProject(projectId);
+
+  if (appState.selectedProject === project.name) {
+    appState.selectedProject = null;
+    appState.currentView = "day";
+  }
+
+  updateUI();
+}
