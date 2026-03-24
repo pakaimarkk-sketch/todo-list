@@ -30,9 +30,9 @@ export function renderDayTasks(selectedDate, helpers) {
   }
 
   addTaskButtons.forEach((button) => {
-    button.addEventListener("click", () => {
+    button.onclick = () => {
       openTaskForm(taskList, null, rerender, selectedDate, null);
-    });
+    };
   });
 
   rerender();
@@ -81,9 +81,9 @@ export function renderWeekTasks(selectedDate, helpers) {
   }
 
   addTaskButtons.forEach((button) => {
-    button.addEventListener("click", () => {
-      openTaskForm(null, null, () => renderWeekTasks(selectedDate, helpers), selectedDate, null);
-    });
+    button.onclick = () => {
+      openTaskForm(null, null, rerender, selectedDate, null);
+    };
   });
 
   rerender();
@@ -204,9 +204,11 @@ export function renderMonthTasks(selectedDate, helpers) {
   }
 
   if (addTaskBtn) {
-    addTaskBtn.addEventListener("click", () => {
-      openTaskForm(null, null, rerender, selectedDate, null);
-    });
+      addTaskButtons.forEach((button) => {
+        button.onclick = () => {
+        openTaskForm(null, null, rerender, selectedDate, null);
+    };
+});
   }
 
   const dayCells = monthGrid.querySelectorAll("[data-date]");

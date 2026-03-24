@@ -29,10 +29,10 @@ export function renderProjectDayTasks(projectName, selectedDate, helpers,) {
         );
         }
 
-        addTaskButtons.forEach((button) => {
-        button.addEventListener("click", () => {
-            openTaskForm(taskList, null, rerender, selectedDate, projectName);
-        });
+    addTaskButtons.forEach((button) => {
+      button.onclick = () => {
+        openTaskForm(taskList, null, rerender, selectedDate, null);
+      };
     });
 
   rerender();
@@ -81,9 +81,9 @@ export function renderProjectWeekTasks(projectName, selectedDate, helpers) {
   }
 
   addTaskButtons.forEach((button) => {
-    button.addEventListener("click", () => {
-      openTaskForm(null, null, () => renderProjectWeekTasks(projectName, selectedDate, helpers), selectedDate, projectName);
-    });
+    button.onclick = () => {
+      openTaskForm(null, null, rerender, selectedDate, null);
+    };
   });
 
   rerender();
@@ -163,39 +163,58 @@ function createWeekTaskCard(task, onEdit, onDelete, onToggle) {
 }
 
 export function renderProjectMonthTasks(projectName, selectedDate, helpers) {
-  const { onDayClick } = helpers;
+  const { onDayClick, openTaskForm } = helpers;
 
   const todo = document.getElementById("todo");
   const monthGrid = todo.querySelector(".month-grid");
+  const addTaskBtn = todo.querySelector("#monthAddTask");
+
   if (!monthGrid) return;
 
-  const monthTasks = getProjectMonthTasks(projectName, selectedDate);
-  const dayCells = monthGrid.querySelectorAll("[data-date]");
+  function paintMonthPreviews() {
+    const monthTasks = getProjectMonthTasks(projectName, selectedDate);
+    const dayCells = monthGrid.querySelectorAll("[data-date]");
 
-  dayCells.forEach((cell) => {
-    const cellDate = cell.dataset.date;
-    const preview = cell.querySelector(".month-task-preview");
+    dayCells.forEach((cell) => {
+      const cellDate = cell.dataset.date;
+      const preview = cell.querySelector(".month-task-preview");
 
-    if (!preview) return;
+      if (!preview) return;
 
-    preview.textContent = "";
+      preview.textContent = "";
 
-    const cellTasks = monthTasks.filter((task) => task.dueDate === cellDate);
+      const cellTasks = monthTasks.filter((task) => task.dueDate === cellDate);
 
-    cellTasks.slice(0, 3).forEach((task) => {
-      const previewItem = createEl("div", null, "month-preview-item");
-      previewItem.textContent = task.title;
-      preview.appendChild(previewItem);
+      cellTasks.slice(0, 3).forEach((task) => {
+        const previewItem = createEl("div", null, "month-preview-item");
+        previewItem.textContent = task.title;
+        preview.appendChild(previewItem);
+      });
+
+      if (cellTasks.length > 3) {
+        const more = createEl("div", null, "month-preview-more");
+        more.textContent = `+${cellTasks.length - 3} more`;
+        preview.appendChild(more);
+      }
     });
+  }
 
-    if (cellTasks.length > 3) {
-      const more = createEl("div", null, "month-preview-more");
-      more.textContent = `+${cellTasks.length - 3} more`;
-      preview.appendChild(more);
-    }
+  function rerender() {
+    paintMonthPreviews();
+  }
 
+  if (addTaskBtn) {
+    addTaskBtn.onclick = () => {
+      openTaskForm(null, null, rerender, selectedDate, projectName);
+    };
+  }
+
+  const dayCells = monthGrid.querySelectorAll("[data-date]");
+  dayCells.forEach((cell) => {
     cell.addEventListener("click", () => {
-      onDayClick(cellDate);
+      onDayClick(cell.dataset.date);
     });
   });
+
+  rerender();
 }
